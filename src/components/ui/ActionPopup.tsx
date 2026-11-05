@@ -15,6 +15,7 @@ export interface ActionPopupProps {
   icon?: React.ReactNode;
   variant?: "danger" | "success" | "info" | "warning";
   isLoading?: boolean;
+  maxWidthClass?: string;
   children?: React.ReactNode;
 }
 
@@ -29,6 +30,7 @@ export const ActionPopup: React.FC<ActionPopupProps> = ({
   icon,
   variant = "info",
   isLoading = false,
+  maxWidthClass = "max-w-xl",
   children,
 }) => {
   useEffect(() => {
@@ -37,8 +39,14 @@ export const ActionPopup: React.FC<ActionPopupProps> = ({
         onClose();
       }
     };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+      window.addEventListener("keydown", handleKeyDown);
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+      window.removeEventListener("keydown", handleKeyDown);
+    };
   }, [isOpen, isLoading, onClose]);
 
   const variantStyles = {
@@ -75,7 +83,7 @@ export const ActionPopup: React.FC<ActionPopupProps> = ({
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+        <div className="fixed inset-0 z-50 overflow-y-auto">
           {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
@@ -83,74 +91,82 @@ export const ActionPopup: React.FC<ActionPopupProps> = ({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={() => !isLoading && onClose()}
-            className="fixed inset-0 bg-black/75 backdrop-blur-md"
+            className="fixed inset-0 bg-black/80 backdrop-blur-md"
           />
 
-          {/* Modal Container */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.94, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.94, y: 20 }}
-            transition={{ type: "spring", stiffness: 350, damping: 28 }}
-            className={`relative w-full max-w-lg bg-[#0c1220] border ${variantStyles.border} ${variantStyles.glow} rounded-2xl p-6 sm:p-7 shadow-2xl z-10 overflow-hidden text-left`}
-          >
-            {/* Close button */}
-            <button
-              onClick={onClose}
-              disabled={isLoading}
-              className="absolute top-5 right-5 p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.08] transition-colors disabled:opacity-30"
-              aria-label="Close dialog"
+          {/* Centering wrapper with full vertical padding */}
+          <div className="flex min-h-full items-center justify-center p-3 sm:p-6 py-6 sm:py-10 text-center">
+            {/* Modal Container */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 15 }}
+              transition={{ type: "spring", stiffness: 380, damping: 30 }}
+              className={`relative w-full ${maxWidthClass} max-h-[90vh] flex flex-col bg-[#0c1220] border ${variantStyles.border} ${variantStyles.glow} rounded-2xl shadow-2xl z-10 text-left overflow-hidden`}
             >
-              <X size={18} />
-            </button>
+              {/* Top Header Bar (Fixed / non-scrolling) */}
+              <div className="flex items-start justify-between gap-4 p-5 sm:p-6 pb-4 border-b border-white/[0.08] bg-[#0c1220]/95 backdrop-blur-xl shrink-0">
+                <div className="flex items-start gap-3.5 pr-8">
+                  {icon && (
+                    <div
+                      className={`flex items-center justify-center w-11 h-11 rounded-xl shrink-0 ${variantStyles.iconBg}`}
+                    >
+                      {icon}
+                    </div>
+                  )}
 
-            {/* Header with Icon */}
-            <div className="flex items-start gap-4">
-              {icon && (
-                <div
-                  className={`flex items-center justify-center w-12 h-12 rounded-xl shrink-0 ${variantStyles.iconBg}`}
-                >
-                  {icon}
+                  <div>
+                    <h3 className="text-base sm:text-lg font-bold text-white tracking-tight">
+                      {title}
+                    </h3>
+                    <p className="mt-0.5 text-xs text-slate-400 leading-relaxed">
+                      {description}
+                    </p>
+                  </div>
                 </div>
-              )}
 
-              <div className="flex-1 pr-6">
-                <h3 className="text-lg font-semibold text-white tracking-tight">
-                  {title}
-                </h3>
-                <p className="mt-1 text-sm text-slate-300 leading-relaxed">
-                  {description}
-                </p>
-              </div>
-            </div>
-
-            {/* Custom Content / Form fields */}
-            {children && <div className="mt-5">{children}</div>}
-
-            {/* Action Buttons */}
-            <div className="flex items-center justify-end gap-3 mt-6 pt-4 border-t border-white/[0.08]">
-              <button
-                type="button"
-                onClick={onClose}
-                disabled={isLoading}
-                className="px-4 py-2.5 rounded-xl text-sm font-medium text-slate-300 hover:text-white bg-white/[0.04] hover:bg-white/[0.08] transition-colors disabled:opacity-40"
-              >
-                {cancelText}
-              </button>
-
-              {onConfirm && (
+                {/* Close button */}
                 <button
                   type="button"
-                  onClick={onConfirm}
+                  onClick={onClose}
                   disabled={isLoading}
-                  className={`inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-sm transition-all shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed ${variantStyles.button}`}
+                  className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.08] transition-colors disabled:opacity-30 shrink-0"
+                  aria-label="Close dialog"
                 >
-                  {isLoading && <Loader2 size={16} className="animate-spin" />}
-                  <span>{confirmText}</span>
+                  <X size={18} />
                 </button>
-              )}
-            </div>
-          </motion.div>
+              </div>
+
+              {/* Scrollable Body Content */}
+              <div className="flex-1 overflow-y-auto p-5 sm:p-6 space-y-4">
+                {children}
+              </div>
+
+              {/* Bottom Action Footer (Fixed / non-scrolling) */}
+              <div className="flex items-center justify-end gap-3 p-4 sm:p-5 border-t border-white/[0.08] bg-[#090d16]/90 backdrop-blur-xl shrink-0">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  disabled={isLoading}
+                  className="px-4 py-2 rounded-xl text-xs sm:text-sm font-medium text-slate-300 hover:text-white bg-white/[0.04] hover:bg-white/[0.08] transition-colors disabled:opacity-40"
+                >
+                  {cancelText}
+                </button>
+
+                {onConfirm && (
+                  <button
+                    type="button"
+                    onClick={onConfirm}
+                    disabled={isLoading}
+                    className={`inline-flex items-center justify-center gap-2 px-5 py-2 rounded-xl text-xs sm:text-sm transition-all shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed ${variantStyles.button}`}
+                  >
+                    {isLoading && <Loader2 size={15} className="animate-spin" />}
+                    <span>{confirmText}</span>
+                  </button>
+                )}
+              </div>
+            </motion.div>
+          </div>
         </div>
       )}
     </AnimatePresence>

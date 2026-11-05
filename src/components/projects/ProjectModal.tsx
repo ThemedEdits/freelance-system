@@ -172,8 +172,9 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
       icon={<Briefcase size={22} />}
       variant="info"
       isLoading={isLoading}
+      maxWidthClass="max-w-2xl"
     >
-      <div className="space-y-4 pt-2 max-h-[75vh] overflow-y-auto pr-1">
+      <div className="space-y-4">
         {error && (
           <div className="p-3 text-xs rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-300">
             {error}
