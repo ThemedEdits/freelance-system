@@ -48,25 +48,25 @@ export const CustomNumberStepper: React.FC<CustomNumberStepperProps> = ({
   };
 
   return (
-    <div className={`text-left ${className}`}>
-      {label && (
-        <label className="block mb-1.5 text-xs font-semibold uppercase tracking-wider text-slate-400">
-          {label}
-        </label>
-      )}
+    <div className={`text-left pt-2.5 ${className}`}>
+      <div className="relative flex items-center h-[46px] rounded-xl bg-black border border-white/15 hover:border-white/30 px-2 transition-colors">
+        {label && (
+          <span className="absolute -top-2.5 left-3 text-[11px] font-medium bg-black px-1.5 text-zinc-400 select-none pointer-events-none">
+            {label}
+          </span>
+        )}
 
-      <div className="flex items-center rounded-xl bg-slate-900/60 border border-white/[0.08] hover:border-white/[0.18] p-1 transition-all duration-200">
         <button
           type="button"
           disabled={disabled || value <= min}
           onClick={handleDecrement}
-          aria-label="Decrease quantity"
-          className="flex items-center justify-center w-8 h-8 rounded-lg bg-white/[0.04] hover:bg-white/[0.1] active:scale-95 text-slate-300 hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+          aria-label="Decrease"
+          className="flex items-center justify-center w-7 h-7 rounded-lg bg-zinc-900 hover:bg-zinc-800 active:scale-95 text-zinc-300 hover:text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
         >
-          <Minus size={14} />
+          <Minus size={13} />
         </button>
 
-        <div className="flex-1 flex items-center justify-center px-2">
+        <div className="flex-1 flex items-center justify-center px-1">
           <input
             type="number"
             value={value}
@@ -77,7 +77,7 @@ export const CustomNumberStepper: React.FC<CustomNumberStepperProps> = ({
             className="w-full text-center bg-transparent text-white font-semibold text-sm focus:outline-none"
           />
           {suffix && (
-            <span className="text-xs text-slate-400 ml-1 select-none">{suffix}</span>
+            <span className="text-xs text-zinc-400 ml-1 select-none">{suffix}</span>
           )}
         </div>
 
@@ -85,10 +85,10 @@ export const CustomNumberStepper: React.FC<CustomNumberStepperProps> = ({
           type="button"
           disabled={disabled || value >= max}
           onClick={handleIncrement}
-          aria-label="Increase quantity"
-          className="flex items-center justify-center w-8 h-8 rounded-lg bg-white/[0.04] hover:bg-white/[0.1] active:scale-95 text-slate-300 hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+          aria-label="Increase"
+          className="flex items-center justify-center w-7 h-7 rounded-lg bg-zinc-900 hover:bg-zinc-800 active:scale-95 text-zinc-300 hover:text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
         >
-          <Plus size={14} />
+          <Plus size={13} />
         </button>
       </div>
     </div>

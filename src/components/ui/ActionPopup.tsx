@@ -49,36 +49,10 @@ export const ActionPopup: React.FC<ActionPopupProps> = ({
     };
   }, [isOpen, isLoading, onClose]);
 
-  const variantStyles = {
-    danger: {
-      border: "border-rose-500/30",
-      glow: "shadow-[0_20px_60px_-15px_rgba(244,63,94,0.3)]",
-      iconBg: "bg-rose-500/15 text-rose-400 border border-rose-500/20",
-      button:
-        "bg-gradient-to-r from-rose-600 to-rose-700 hover:from-rose-500 hover:to-rose-600 text-white shadow-rose-900/40",
-    },
-    success: {
-      border: "border-emerald-500/30",
-      glow: "shadow-[0_20px_60px_-15px_rgba(16,185,129,0.3)]",
-      iconBg: "bg-emerald-500/15 text-emerald-400 border border-emerald-500/20",
-      button:
-        "bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white shadow-emerald-900/40",
-    },
-    warning: {
-      border: "border-amber-500/30",
-      glow: "shadow-[0_20px_60px_-15px_rgba(245,158,11,0.3)]",
-      iconBg: "bg-amber-500/15 text-amber-400 border border-amber-500/20",
-      button:
-        "bg-gradient-to-r from-amber-600 to-yellow-600 hover:from-amber-500 hover:to-yellow-500 text-slate-950 font-semibold shadow-amber-900/40",
-    },
-    info: {
-      border: "border-cyan-500/30",
-      glow: "shadow-[0_20px_60px_-15px_rgba(0,229,255,0.25)]",
-      iconBg: "bg-cyan-500/15 text-cyan-400 border border-cyan-500/20",
-      button:
-        "bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-semibold shadow-cyan-900/40",
-    },
-  }[variant];
+  const confirmBtnStyle =
+    variant === "danger"
+      ? "bg-rose-600 hover:bg-rose-500 text-white"
+      : "bg-white text-black hover:bg-zinc-200 font-semibold";
 
   return (
     <AnimatePresence>
@@ -89,51 +63,48 @@ export const ActionPopup: React.FC<ActionPopupProps> = ({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
+            transition={{ duration: 0.15 }}
             onClick={() => !isLoading && onClose()}
-            className="fixed inset-0 bg-black/80 backdrop-blur-md"
+            className="fixed inset-0 bg-black/85 backdrop-blur-sm"
           />
 
-          {/* Centering wrapper with full vertical padding */}
-          <div className="flex min-h-full items-center justify-center p-3 sm:p-6 py-6 sm:py-10 text-center">
+          {/* Centering wrapper */}
+          <div className="flex min-h-full items-center justify-center p-3 sm:p-6 py-8 text-center">
             {/* Modal Container */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              initial={{ opacity: 0, scale: 0.96, y: 10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 15 }}
-              transition={{ type: "spring", stiffness: 380, damping: 30 }}
-              className={`relative w-full ${maxWidthClass} max-h-[90vh] flex flex-col bg-[#0c1220] border ${variantStyles.border} ${variantStyles.glow} rounded-2xl shadow-2xl z-10 text-left overflow-hidden`}
+              exit={{ opacity: 0, scale: 0.96, y: 10 }}
+              transition={{ duration: 0.15, ease: "easeOut" }}
+              className={`relative w-full ${maxWidthClass} max-h-[90vh] flex flex-col bg-black border border-white/15 rounded-2xl shadow-2xl z-10 text-left overflow-hidden`}
             >
-              {/* Top Header Bar (Fixed / non-scrolling) */}
-              <div className="flex items-start justify-between gap-4 p-5 sm:p-6 pb-4 border-b border-white/[0.08] bg-[#0c1220]/95 backdrop-blur-xl shrink-0">
-                <div className="flex items-start gap-3.5 pr-8">
+              {/* Top Header Bar */}
+              <div className="flex items-start justify-between gap-4 p-5 sm:p-6 pb-4 border-b border-white/10 bg-black shrink-0">
+                <div className="flex items-start gap-3 pr-6">
                   {icon && (
-                    <div
-                      className={`flex items-center justify-center w-11 h-11 rounded-xl shrink-0 ${variantStyles.iconBg}`}
-                    >
+                    <div className="flex items-center justify-center w-10 h-10 rounded-xl shrink-0 bg-white/5 border border-white/10 text-white">
                       {icon}
                     </div>
                   )}
 
                   <div>
-                    <h3 className="text-base sm:text-lg font-bold text-white tracking-tight">
+                    <h3 className="text-base font-bold text-white tracking-tight">
                       {title}
                     </h3>
-                    <p className="mt-0.5 text-xs text-slate-400 leading-relaxed">
+                    <p className="mt-0.5 text-xs text-zinc-400 leading-relaxed">
                       {description}
                     </p>
                   </div>
                 </div>
 
-                {/* Close button */}
                 <button
                   type="button"
                   onClick={onClose}
                   disabled={isLoading}
-                  className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.08] transition-colors disabled:opacity-30 shrink-0"
+                  className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/10 transition-colors disabled:opacity-30 shrink-0"
                   aria-label="Close dialog"
                 >
-                  <X size={18} />
+                  <X size={17} />
                 </button>
               </div>
 
@@ -142,13 +113,13 @@ export const ActionPopup: React.FC<ActionPopupProps> = ({
                 {children}
               </div>
 
-              {/* Bottom Action Footer (Fixed / non-scrolling) */}
-              <div className="flex items-center justify-end gap-3 p-4 sm:p-5 border-t border-white/[0.08] bg-[#090d16]/90 backdrop-blur-xl shrink-0">
+              {/* Bottom Action Footer */}
+              <div className="flex items-center justify-end gap-3 p-4 sm:p-5 border-t border-white/10 bg-black shrink-0">
                 <button
                   type="button"
                   onClick={onClose}
                   disabled={isLoading}
-                  className="px-4 py-2 rounded-xl text-xs sm:text-sm font-medium text-slate-300 hover:text-white bg-white/[0.04] hover:bg-white/[0.08] transition-colors disabled:opacity-40"
+                  className="px-4 py-2 rounded-xl text-xs sm:text-sm font-medium text-zinc-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-colors disabled:opacity-40"
                 >
                   {cancelText}
                 </button>
@@ -158,9 +129,9 @@ export const ActionPopup: React.FC<ActionPopupProps> = ({
                     type="button"
                     onClick={onConfirm}
                     disabled={isLoading}
-                    className={`inline-flex items-center justify-center gap-2 px-5 py-2 rounded-xl text-xs sm:text-sm transition-all shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed ${variantStyles.button}`}
+                    className={`inline-flex items-center justify-center gap-2 px-5 py-2 rounded-xl text-xs sm:text-sm transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed ${confirmBtnStyle}`}
                   >
-                    {isLoading && <Loader2 size={15} className="animate-spin" />}
+                    {isLoading && <Loader2 size={14} className="animate-spin" />}
                     <span>{confirmText}</span>
                   </button>
                 )}

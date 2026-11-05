@@ -26,9 +26,12 @@ export const FloatingTextarea: React.FC<FloatingTextareaProps> = ({
   const [isFocused, setIsFocused] = useState(false);
   const [internalValue, setInternalValue] = useState(value ?? defaultValue ?? "");
 
-  const hasValue = Boolean(internalValue || value);
+  const hasValue = Boolean(
+    (value !== undefined && value !== null && String(value).length > 0) ||
+      (internalValue !== undefined && internalValue !== null && String(internalValue).length > 0)
+  );
   const isFloating = isFocused || hasValue;
-  const textareaId = id || `float-ta-${label.replace(/\s+/g, "-").toLowerCase()}`;
+  const textareaId = id || `float-ta-${label.replace(/[^a-zA-Z0-9]/g, "-").toLowerCase()}`;
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInternalValue(e.target.value);
@@ -36,27 +39,16 @@ export const FloatingTextarea: React.FC<FloatingTextareaProps> = ({
   };
 
   return (
-    <div className="relative w-full text-left">
+    <div className="relative w-full text-left pt-2.5">
       <div
-        className={`relative w-full rounded-xl transition-all duration-300 ${
+        className={`relative w-full rounded-xl transition-colors duration-150 ${
           isFocused
-            ? "bg-slate-900/90 border-cyan-500/70 shadow-[0_0_20px_rgba(0,229,255,0.18)]"
+            ? "bg-black border-white ring-1 ring-white"
             : error
-            ? "bg-rose-950/20 border-rose-500/60 shadow-[0_0_15px_rgba(244,63,94,0.15)]"
-            : "bg-slate-900/50 border-white/[0.08] hover:border-white/[0.18] hover:bg-slate-900/70"
+            ? "bg-black border-rose-500"
+            : "bg-black border-white/15 hover:border-white/30"
         } border`}
       >
-        <label
-          htmlFor={textareaId}
-          className={`absolute left-3.5 select-none pointer-events-none transition-all duration-200 ease-out origin-top-left ${
-            isFloating
-              ? "top-2 text-[11px] font-semibold tracking-wider uppercase text-cyan-400 scale-90"
-              : "top-3.5 text-sm font-normal text-slate-400"
-          }`}
-        >
-          {label}
-        </label>
-
         <textarea
           id={textareaId}
           rows={rows}
@@ -70,17 +62,29 @@ export const FloatingTextarea: React.FC<FloatingTextareaProps> = ({
             setIsFocused(false);
             onBlur?.(e);
           }}
-          className={`w-full bg-transparent text-white px-3.5 pt-7 pb-2.5 text-sm focus:outline-none resize-none placeholder-transparent ${className}`}
+          className={`w-full bg-transparent text-white px-3.5 py-3 text-sm focus:outline-none resize-none placeholder-transparent ${className}`}
           placeholder={label}
           {...props}
         />
+
+        {/* Google-style floating label across the border line */}
+        <label
+          htmlFor={textareaId}
+          className={`absolute left-3 select-none pointer-events-none px-1.5 transition-all duration-150 ease-out z-10 ${
+            isFloating
+              ? "-top-2.5 text-[11px] font-medium tracking-tight bg-black text-white"
+              : "top-3.5 text-xs font-normal text-zinc-400"
+          } ${isFocused ? "text-white" : error ? "text-rose-400" : ""}`}
+        >
+          {label}
+        </label>
       </div>
 
       {error && (
-        <p className="mt-1.5 text-xs text-rose-400 font-medium pl-1">{error}</p>
+        <p className="mt-1 text-xs text-rose-400 font-medium pl-1">{error}</p>
       )}
       {hint && !error && (
-        <p className="mt-1 text-xs text-slate-500 pl-1">{hint}</p>
+        <p className="mt-1 text-xs text-zinc-500 pl-1">{hint}</p>
       )}
     </div>
   );

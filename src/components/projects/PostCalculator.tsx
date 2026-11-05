@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Plus, Trash2, Calculator, Sparkles, Tag, Check } from "lucide-react";
+import { Plus, Trash2, Tag } from "lucide-react";
 import { CustomNumberStepper } from "@/components/ui/CustomNumberStepper";
 import { FloatingInput } from "@/components/ui/FloatingInput";
 import { CustomSelect } from "@/components/ui/CustomSelect";
@@ -92,16 +92,15 @@ export const PostCalculator: React.FC<PostCalculatorProps> = ({
   const grandTotal = Math.max(0, subtotal - discountAmount);
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-4">
       {/* Header Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-white/[0.08]">
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-white/10">
         <div>
-          <h3 className="text-base font-semibold text-white flex items-center gap-2">
-            <Calculator size={18} className="text-cyan-400" />
-            <span>Posts & Deliverables Calculator</span>
+          <h3 className="text-sm font-semibold text-white tracking-tight">
+            Posts & Deliverables Scope
           </h3>
-          <p className="text-xs text-slate-400 mt-0.5">
-            Track and calculate project totals based on post types, quantities, and per-post rates.
+          <p className="text-xs text-zinc-400 mt-0.5">
+            Add deliverables, quantities, and rates to calculate project amounts.
           </p>
         </div>
 
@@ -129,7 +128,7 @@ export const PostCalculator: React.FC<PostCalculatorProps> = ({
           <button
             type="button"
             onClick={() => handleAddItem()}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold bg-cyan-500/15 hover:bg-cyan-500/25 text-cyan-300 border border-cyan-500/30 transition-all active:scale-95 shadow-[0_0_15px_rgba(0,229,255,0.1)]"
+            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-white text-black hover:bg-zinc-200 transition-colors"
           >
             <Plus size={14} />
             <span>Add Item</span>
@@ -139,14 +138,14 @@ export const PostCalculator: React.FC<PostCalculatorProps> = ({
 
       {/* Items List */}
       {items.length === 0 ? (
-        <div className="p-8 text-center rounded-2xl bg-white/[0.02] border border-dashed border-white/[0.08]">
-          <p className="text-sm text-slate-400">
+        <div className="p-8 text-center rounded-2xl bg-zinc-950/40 border border-dashed border-white/10">
+          <p className="text-xs text-zinc-400">
             No posts or deliverables added yet.
           </p>
           <button
             type="button"
             onClick={() => handleAddItem("Multi-Slide Carousel Post", 3500)}
-            className="mt-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium bg-cyan-500/15 text-cyan-300 hover:bg-cyan-500/25 transition-colors"
+            className="mt-3 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-white/10 text-white hover:bg-white/20 transition-colors"
           >
             <Plus size={13} />
             <span>Add First Deliverable</span>
@@ -157,92 +156,97 @@ export const PostCalculator: React.FC<PostCalculatorProps> = ({
           {items.map((item, idx) => (
             <div
               key={item.id}
-              className="p-4 rounded-xl bg-slate-900/60 border border-white/[0.07] hover:border-white/[0.12] transition-all grid grid-cols-1 md:grid-cols-12 gap-3.5 items-center"
+              className="p-4 rounded-xl bg-zinc-950/80 border border-white/10 space-y-3"
             >
-              {/* Deliverable Type & Notes */}
-              <div className="md:col-span-5 space-y-2">
-                <FloatingInput
-                  label={`Post Type #${idx + 1}`}
-                  value={item.item_type}
-                  onChange={(e) =>
-                    handleUpdateItem(item.id, "item_type", e.target.value)
-                  }
-                  placeholder="e.g. Carousel Post, Reel"
-                />
-              </div>
-
-              {/* Quantity Stepper */}
-              <div className="md:col-span-3">
-                <CustomNumberStepper
-                  label="Number of Posts"
-                  value={item.quantity}
-                  onChange={(val) => handleUpdateItem(item.id, "quantity", val)}
-                  min={1}
-                  suffix="posts"
-                />
-              </div>
-
-              {/* Price Per Post */}
-              <div className="md:col-span-2">
-                <FloatingInput
-                  label="Price / Post"
-                  type="number"
-                  prefixText={currencySymbol}
-                  value={item.unit_price}
-                  onChange={(e) =>
-                    handleUpdateItem(
-                      item.id,
-                      "unit_price",
-                      parseFloat(e.target.value) || 0
-                    )
-                  }
-                />
-              </div>
-
-              {/* Line Total & Delete */}
-              <div className="md:col-span-2 flex items-center justify-between gap-2 pt-2 md:pt-0">
-                <div className="text-right flex-1">
-                  <span className="text-[10px] uppercase font-semibold text-slate-400 block">
-                    Total
-                  </span>
-                  <span className="text-sm font-bold text-cyan-300">
-                    {formatPKR(item.total_price)}
-                  </span>
-                </div>
-
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-zinc-400">
+                  Deliverable #{idx + 1}
+                </span>
                 <button
                   type="button"
                   onClick={() => handleRemoveItem(item.id)}
                   aria-label="Remove item"
-                  className="p-2 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors"
+                  className="p-1 rounded-lg text-zinc-500 hover:text-rose-400 hover:bg-rose-500/10 transition-colors"
                 >
-                  <Trash2 size={16} />
+                  <Trash2 size={15} />
                 </button>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end">
+                {/* Deliverable Type */}
+                <div className="sm:col-span-5">
+                  <FloatingInput
+                    label="Post / Asset Name"
+                    value={item.item_type}
+                    onChange={(e) =>
+                      handleUpdateItem(item.id, "item_type", e.target.value)
+                    }
+                    placeholder="e.g. Carousel Post"
+                  />
+                </div>
+
+                {/* Quantity Stepper */}
+                <div className="sm:col-span-3">
+                  <CustomNumberStepper
+                    label="Number of Posts"
+                    value={item.quantity}
+                    onChange={(val) => handleUpdateItem(item.id, "quantity", val)}
+                    min={1}
+                    suffix="posts"
+                  />
+                </div>
+
+                {/* Price Per Post */}
+                <div className="sm:col-span-4">
+                  <FloatingInput
+                    label="Price per Post"
+                    type="number"
+                    prefixText={currencySymbol}
+                    value={item.unit_price}
+                    onChange={(e) =>
+                      handleUpdateItem(
+                        item.id,
+                        "unit_price",
+                        parseFloat(e.target.value) || 0
+                      )
+                    }
+                  />
+                </div>
+              </div>
+
+              {/* Deliverable Total */}
+              <div className="flex items-center justify-between pt-2 border-t border-white/5 text-xs">
+                <span className="text-zinc-500">
+                  {item.quantity} × {formatPKR(item.unit_price)}
+                </span>
+                <span className="font-bold text-white text-sm">
+                  {formatPKR(item.total_price)}
+                </span>
               </div>
             </div>
           ))}
         </div>
       )}
 
-      {/* Totals & Discounts Breakdown */}
-      <div className="p-5 rounded-2xl glass-card border border-white/[0.08] space-y-3.5 mt-4">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <Tag size={16} className="text-cyan-400" />
-            <span className="text-sm font-medium text-slate-300">
+      {/* Totals & Discounts Section */}
+      <div className="p-4 rounded-xl bg-zinc-950/80 border border-white/10 space-y-3.5">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <Tag size={15} className="text-zinc-400" />
+            <span className="text-xs font-semibold text-zinc-300">
               Apply Project Discount
             </span>
           </div>
 
-          <div className="flex items-center gap-2">
-            <div className="flex rounded-xl bg-slate-900 border border-white/[0.08] p-1">
+          <div className="flex items-end gap-2">
+            <div className="flex rounded-xl bg-black border border-white/15 p-1 h-11 items-center">
               <button
                 type="button"
                 onClick={() => onChangeDiscount(discount, "fixed")}
-                className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
                   discountType === "fixed"
-                    ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/30"
-                    : "text-slate-400 hover:text-white"
+                    ? "bg-white text-black font-semibold"
+                    : "text-zinc-400 hover:text-white"
                 }`}
               >
                 Fixed ({currencySymbol})
@@ -250,17 +254,17 @@ export const PostCalculator: React.FC<PostCalculatorProps> = ({
               <button
                 type="button"
                 onClick={() => onChangeDiscount(discount, "percentage")}
-                className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
                   discountType === "percentage"
-                    ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/30"
-                    : "text-slate-400 hover:text-white"
+                    ? "bg-white text-black font-semibold"
+                    : "text-zinc-400 hover:text-white"
                 }`}
               >
-                Percentage (%)
+                Percent (%)
               </button>
             </div>
 
-            <div className="w-28">
+            <div className="w-32">
               <FloatingInput
                 label={discountType === "fixed" ? "Discount (Rs)" : "Discount (%)"}
                 type="number"
@@ -273,14 +277,14 @@ export const PostCalculator: React.FC<PostCalculatorProps> = ({
           </div>
         </div>
 
-        <div className="pt-3 border-t border-white/[0.06] space-y-1.5 text-sm">
-          <div className="flex items-center justify-between text-slate-400">
+        <div className="pt-3 border-t border-white/10 space-y-1.5 text-xs">
+          <div className="flex items-center justify-between text-zinc-400">
             <span>Subtotal ({items.reduce((acc, i) => acc + i.quantity, 0)} deliverables)</span>
-            <span className="font-semibold text-slate-200">{formatPKR(subtotal)}</span>
+            <span className="font-semibold text-zinc-200">{formatPKR(subtotal)}</span>
           </div>
 
           {discountAmount > 0 && (
-            <div className="flex items-center justify-between text-emerald-400">
+            <div className="flex items-center justify-between text-zinc-300">
               <span>
                 Discount applied{" "}
                 {discountType === "percentage" ? `(${discount}%)` : ""}
@@ -289,9 +293,9 @@ export const PostCalculator: React.FC<PostCalculatorProps> = ({
             </div>
           )}
 
-          <div className="flex items-center justify-between text-base font-bold text-white pt-2 border-t border-white/[0.08]">
+          <div className="flex items-center justify-between text-sm font-bold text-white pt-2 border-t border-white/10">
             <span>Grand Total</span>
-            <span className="text-lg text-cyan-400">{formatPKR(grandTotal)}</span>
+            <span className="text-base text-white">{formatPKR(grandTotal)}</span>
           </div>
         </div>
       </div>

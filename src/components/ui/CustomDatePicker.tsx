@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Calendar as CalendarIcon, Clock } from "lucide-react";
+import { Calendar as CalendarIcon } from "lucide-react";
 
 interface CustomDatePickerProps {
   label: string;
@@ -32,14 +32,14 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
   };
 
   return (
-    <div className={`relative w-full text-left ${className}`}>
-      <span className="block mb-1.5 text-xs font-semibold uppercase tracking-wider text-slate-400">
-        {label}
-      </span>
+    <div className={`relative w-full text-left pt-2.5 ${className}`}>
+      <div className="relative flex items-center h-[46px] w-full rounded-xl bg-black border border-white/15 hover:border-white/30 focus-within:border-white focus-within:ring-1 focus-within:ring-white transition-colors">
+        <label className="absolute -top-2.5 left-3 text-[11px] font-medium bg-black px-1.5 text-zinc-400 select-none pointer-events-none">
+          {label}
+        </label>
 
-      <div className="relative flex items-center w-full rounded-xl bg-slate-900/50 border border-white/[0.08] hover:border-white/[0.18] focus-within:border-cyan-500/70 focus-within:shadow-[0_0_20px_rgba(0,229,255,0.18)] transition-all duration-300">
-        <div className="pl-3.5 pr-2 text-cyan-400 select-none">
-          <CalendarIcon size={16} />
+        <div className="pl-3.5 pr-2 text-zinc-400 select-none">
+          <CalendarIcon size={15} />
         </div>
 
         <input
@@ -48,43 +48,30 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
           min={min}
           max={max}
           onChange={(e) => onChange(e.target.value)}
-          className="w-full bg-transparent text-white px-2 py-3 text-sm focus:outline-none [color-scheme:dark] cursor-pointer"
+          className="w-full bg-transparent text-white px-2 py-2 text-sm focus:outline-none [color-scheme:dark] cursor-pointer"
         />
       </div>
 
       {showQuickPicks && (
         <div className="flex items-center gap-1.5 mt-2 flex-wrap">
-          <span className="text-[10px] uppercase font-semibold text-slate-500 mr-1 flex items-center gap-1">
-            <Clock size={11} /> Quick:
+          <span className="text-[10px] uppercase font-semibold text-zinc-500 mr-1 select-none">
+            Quick:
           </span>
-          <button
-            type="button"
-            onClick={() => setQuickDate(0)}
-            className="px-2 py-0.5 text-[11px] font-medium rounded-md bg-white/[0.04] hover:bg-cyan-500/20 text-slate-300 hover:text-cyan-300 border border-white/[0.06] transition-colors"
-          >
-            Today
-          </button>
-          <button
-            type="button"
-            onClick={() => setQuickDate(7)}
-            className="px-2 py-0.5 text-[11px] font-medium rounded-md bg-white/[0.04] hover:bg-cyan-500/20 text-slate-300 hover:text-cyan-300 border border-white/[0.06] transition-colors"
-          >
-            +7 Days
-          </button>
-          <button
-            type="button"
-            onClick={() => setQuickDate(14)}
-            className="px-2 py-0.5 text-[11px] font-medium rounded-md bg-white/[0.04] hover:bg-cyan-500/20 text-slate-300 hover:text-cyan-300 border border-white/[0.06] transition-colors"
-          >
-            +14 Days
-          </button>
-          <button
-            type="button"
-            onClick={() => setQuickDate(30)}
-            className="px-2 py-0.5 text-[11px] font-medium rounded-md bg-white/[0.04] hover:bg-cyan-500/20 text-slate-300 hover:text-cyan-300 border border-white/[0.06] transition-colors"
-          >
-            +30 Days
-          </button>
+          {[
+            { label: "Today", days: 0 },
+            { label: "+7d", days: 7 },
+            { label: "+14d", days: 14 },
+            { label: "+30d", days: 30 },
+          ].map((btn) => (
+            <button
+              key={btn.label}
+              type="button"
+              onClick={() => setQuickDate(btn.days)}
+              className="px-2 py-0.5 text-[11px] font-medium rounded-md bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white border border-white/10 transition-colors"
+            >
+              {btn.label}
+            </button>
+          ))}
         </div>
       )}
 
