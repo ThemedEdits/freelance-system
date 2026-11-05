@@ -1,25 +1,6 @@
 import { db } from "./db";
 import crypto from "crypto";
-
-export function formatPKR(amount: number): string {
-  const rounded = Math.round(amount);
-  return `Rs. ${rounded.toLocaleString("en-PK")}`;
-}
-
-export function formatDate(dateString?: string): string {
-  if (!dateString) return "—";
-  try {
-    const d = new Date(dateString);
-    if (isNaN(d.getTime())) return dateString;
-    return d.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    });
-  } catch {
-    return dateString;
-  }
-}
+export { formatPKR, formatDate } from "./utils";
 
 /**
  * Calculates start and end dates of a client's monthly cycle based on their reset day.

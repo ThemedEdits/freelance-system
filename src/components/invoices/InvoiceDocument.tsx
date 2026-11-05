@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import { formatPKR, formatDate } from "@/lib/billing";
+import { formatPKR, formatDate } from "@/lib/utils";
 import { CompanySettings, InvoiceItemSnapshot, PaymentStatus } from "@/lib/types";
 import { Mail, Phone, Building2, CreditCard, Smartphone } from "lucide-react";
 import { InstagramIcon } from "@/components/ui/InstagramIcon";

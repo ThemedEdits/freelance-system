@@ -19,7 +19,7 @@ import { CustomBadge } from "@/components/ui/CustomBadge";
 import { ClientModal } from "@/components/clients/ClientModal";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { EmptyState } from "@/components/ui/EmptyState";
-import { formatPKR } from "@/lib/billing";
+import { formatPKR } from "@/lib/utils";
 
 function ClientsContent() {
   const searchParams = useSearchParams();

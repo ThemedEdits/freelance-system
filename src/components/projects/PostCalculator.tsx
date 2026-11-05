@@ -5,7 +5,7 @@ import { Plus, Trash2, Calculator, Sparkles, Tag, Check } from "lucide-react";
 import { CustomNumberStepper } from "@/components/ui/CustomNumberStepper";
 import { FloatingInput } from "@/components/ui/FloatingInput";
 import { CustomSelect } from "@/components/ui/CustomSelect";
-import { formatPKR } from "@/lib/billing";
+import { formatPKR } from "@/lib/utils";
 
 export interface CalculatorItem {
   id: string;

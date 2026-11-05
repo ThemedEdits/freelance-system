@@ -17,7 +17,7 @@ import { Header } from "@/components/layout/Header";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { AppNotification } from "@/lib/types";
-import { formatDate } from "@/lib/billing";
+import { formatDate } from "@/lib/utils";
 
 export default function NotificationsPage() {
   const [notifications, setNotifications] = useState<AppNotification[]>([]);

@@ -5,7 +5,7 @@ import { ActionPopup } from "@/components/ui/ActionPopup";
 import { FloatingInput } from "@/components/ui/FloatingInput";
 import { CustomSelect } from "@/components/ui/CustomSelect";
 import { CustomDatePicker } from "@/components/ui/CustomDatePicker";
-import { formatPKR } from "@/lib/billing";
+import { formatPKR } from "@/lib/utils";
 import { CreditCard, CheckCircle2, Clock, AlertCircle, PieChart } from "lucide-react";
 import { PaymentStatus } from "@/lib/types";
 

@@ -28,7 +28,7 @@ import { PaymentStatusModal } from "@/components/common/PaymentStatusModal";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { ActionPopup } from "@/components/ui/ActionPopup";
 import { Client, MonthlyCycle, Project, Invoice } from "@/lib/types";
-import { formatPKR, formatDate } from "@/lib/billing";
+import { formatPKR, formatDate } from "@/lib/utils";
 
 export default function ClientDetailPage() {
   const params = useParams();

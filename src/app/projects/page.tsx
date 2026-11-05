@@ -26,7 +26,7 @@ import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { ActionPopup } from "@/components/ui/ActionPopup";
 import { Project, ServiceCategory, PaymentStatus } from "@/lib/types";
-import { formatPKR, formatDate } from "@/lib/billing";
+import { formatPKR, formatDate } from "@/lib/utils";
 
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([]);

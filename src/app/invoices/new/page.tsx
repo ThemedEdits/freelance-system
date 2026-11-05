@@ -25,7 +25,7 @@ import { CustomToggle } from "@/components/ui/CustomToggle";
 import { CustomDatePicker } from "@/components/ui/CustomDatePicker";
 import { InvoiceDocument } from "@/components/invoices/InvoiceDocument";
 import { Client, Project, InvoiceItemSnapshot, CompanySettings } from "@/lib/types";
-import { formatPKR, formatDate } from "@/lib/billing";
+import { formatPKR, formatDate } from "@/lib/utils";
 
 function NewInvoiceContent() {
   const router = useRouter();

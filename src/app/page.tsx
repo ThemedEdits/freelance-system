@@ -9,16 +9,8 @@ import {
   Users,
   Calendar,
   Clock,
-  Plus,
-  FilePlus,
   Briefcase,
   ChevronRight,
-  ShieldAlert,
-  CheckCircle2,
-  RefreshCw,
-  Palette,
-  Globe,
-  Code2,
 } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { AnimatedCounter } from "@/components/ui/AnimatedCounter";
@@ -28,7 +20,7 @@ import { ClientModal } from "@/components/clients/ClientModal";
 import { ProjectModal } from "@/components/projects/ProjectModal";
 import { PaymentStatusModal } from "@/components/common/PaymentStatusModal";
 import { DashboardStats, MonthlyCycle, Project } from "@/lib/types";
-import { formatPKR, formatDate } from "@/lib/billing";
+import { formatPKR, formatDate } from "@/lib/utils";
 
 export default function DashboardPage() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
@@ -223,7 +215,6 @@ export default function DashboardPage() {
       )}
 
       {/* Section 2: CLIENT PAYMENT BEHAVIOR & RELIABILITY RADAR */}
-      {/* (Requested: "how late clients are paying, which client is paying the too late, which pays on time or at least nearest to reset date etc") */}
       <div className="p-6 sm:p-7 rounded-2xl glass-card border border-white/[0.08] space-y-5">
         <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-white/[0.08]">
           <div>
@@ -350,9 +341,8 @@ export default function DashboardPage() {
         )}
       </div>
 
-      {/* Section 3: TWO COLUMNS - Monthly Cycles Radar & Active Projects */}
+      {/* Section 3: Monthly Cycles Radar & Active Projects */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Left Column: Monthly Cycle Resets Tracker */}
         <div className="lg:col-span-7 p-6 rounded-2xl glass-card border border-white/[0.08] space-y-4">
           <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
             <div className="flex items-center gap-2.5">
@@ -445,7 +435,6 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Right Column: Active Projects & Post Calculator quick snapshot */}
         <div className="lg:col-span-5 p-6 rounded-2xl glass-card border border-white/[0.08] space-y-4">
           <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
             <div className="flex items-center gap-2.5">

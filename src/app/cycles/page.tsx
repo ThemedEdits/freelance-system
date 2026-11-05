@@ -22,7 +22,7 @@ import { PaymentStatusModal } from "@/components/common/PaymentStatusModal";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { MonthlyCycle, PaymentStatus } from "@/lib/types";
-import { formatPKR, formatDate } from "@/lib/billing";
+import { formatPKR, formatDate } from "@/lib/utils";
 
 export default function CyclesPage() {
   const [cycles, setCycles] = useState<MonthlyCycle[]>([]);
