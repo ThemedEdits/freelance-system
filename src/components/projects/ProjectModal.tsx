@@ -58,15 +58,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
           total_price: i.total_price,
           notes: i.notes || "",
         }))
-      : [
-          {
-            id: "item-1",
-            item_type: "Multi-Slide Carousel Post",
-            quantity: 5,
-            unit_price: 3500,
-            total_price: 17500,
-          },
-        ]
+      : []
   );
   const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>(
     projectToEdit?.payment_status || "unpaid"
@@ -169,14 +161,13 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
       title={projectToEdit ? "Edit Project & Deliverables" : "Create New Project"}
       description="Add project scope, configure post deliverables & rates, and set billing parameters."
       confirmText={projectToEdit ? "Save Project" : "Create Project"}
-      icon={<Briefcase size={22} />}
-      variant="info"
+      icon={<Briefcase size={18} />}
       isLoading={isLoading}
       maxWidthClass="max-w-2xl"
     >
       <div className="space-y-4">
         {error && (
-          <div className="p-3 text-xs rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-300">
+          <div className="p-3 text-xs rounded-xl bg-zinc-900 border border-white/20 text-white">
             {error}
           </div>
         )}
@@ -211,17 +202,17 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
               {
                 value: "graphic_design",
                 label: "Graphic Design",
-                icon: <Palette size={14} className="text-cyan-400" />,
+                icon: <Palette size={14} className="text-zinc-400" />,
               },
               {
                 value: "web_development",
                 label: "Website Development",
-                icon: <Globe size={14} className="text-purple-400" />,
+                icon: <Globe size={14} className="text-zinc-400" />,
               },
               {
                 value: "software_engineering",
                 label: "Software Engineering",
-                icon: <Code2 size={14} className="text-emerald-400" />,
+                icon: <Code2 size={14} className="text-zinc-400" />,
               },
             ]}
           />
@@ -237,7 +228,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
         {selectedClient &&
           (selectedClient.billing_type === "monthly" ||
             selectedClient.billing_type === "hybrid") && (
-            <div className="p-3.5 rounded-xl bg-cyan-950/20 border border-cyan-500/20">
+            <div className="p-3.5 rounded-xl bg-zinc-950 border border-white/10">
               <CustomToggle
                 label="Extra Project (Separate from Monthly Retainer)"
                 sublabel="Mark this project as an additional billable job outside their fixed monthly retainer."

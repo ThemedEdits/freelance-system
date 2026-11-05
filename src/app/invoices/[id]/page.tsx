@@ -9,8 +9,6 @@ import {
   CheckCircle2,
   Share2,
   Trash2,
-  Edit2,
-  ExternalLink,
 } from "lucide-react";
 import { InvoiceDocument } from "@/components/invoices/InvoiceDocument";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
@@ -90,41 +88,35 @@ export default function InvoiceDetailPage() {
   }
 
   return (
-    <div className="space-y-6 animate-fadeIn pb-16">
+    <div className="space-y-6 pb-16">
       {/* Action Header (Hidden in print) */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 no-print pb-4 border-b border-white/[0.08]">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 no-print pb-4 border-b border-white/10">
         <div>
           <Link
             href="/invoices"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-white transition-colors mb-1"
+            className="inline-flex items-center gap-1 text-xs font-medium text-zinc-400 hover:text-white transition-colors mb-1"
           >
-            <ChevronLeft size={16} />
+            <ChevronLeft size={14} />
             <span>Back to Invoices</span>
           </Link>
-          <div className="flex items-center gap-3">
-            <h1 className="text-xl font-extrabold text-white tracking-tight">
+          <div className="flex items-center gap-2.5">
+            <h1 className="text-xl font-bold text-white tracking-tight">
               {invoice.invoice_number}
             </h1>
-            <span
-              className={`text-xs px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider ${
-                invoice.status === "paid"
-                  ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
-                  : "bg-rose-500/20 text-rose-400 border border-rose-500/30"
-              }`}
-            >
+            <span className="text-[10px] px-2 py-0.5 rounded bg-zinc-900 border border-white/10 font-medium uppercase tracking-wider text-white">
               {invoice.status}
             </span>
           </div>
         </div>
 
-        <div className="flex items-center gap-2.5 flex-wrap">
+        <div className="flex items-center gap-2 flex-wrap">
           {invoice.status !== "paid" && (
             <button
               type="button"
               onClick={handleMarkPaid}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/30 transition-all shadow-sm"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-white/10 transition-colors"
             >
-              <CheckCircle2 size={14} />
+              <CheckCircle2 size={13} className="text-zinc-400" />
               <span>Mark as Paid</span>
             </button>
           )}
@@ -132,28 +124,28 @@ export default function InvoiceDetailPage() {
           <button
             type="button"
             onClick={handleCopyLink}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold bg-white/[0.04] hover:bg-white/[0.08] text-slate-200 border border-white/[0.08] transition-all"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-white/10 transition-colors"
           >
-            <Share2 size={14} />
+            <Share2 size={13} />
             <span>{isCopied ? "Link Copied!" : "Share Link"}</span>
           </button>
 
           <button
             type="button"
             onClick={() => window.print()}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 shadow-lg shadow-cyan-950/40 transition-all active:scale-95"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-white text-black hover:bg-zinc-200 transition-colors shadow-sm"
           >
-            <Printer size={14} strokeWidth={2.5} />
+            <Printer size={13} />
             <span>Print / Save PDF</span>
           </button>
 
           <button
             type="button"
             onClick={() => setIsDeleteModalOpen(true)}
-            className="p-2 rounded-xl text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors"
+            className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-900 transition-colors"
             title="Delete invoice"
           >
-            <Trash2 size={16} />
+            <Trash2 size={14} />
           </button>
         </div>
       </div>

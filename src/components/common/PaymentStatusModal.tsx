@@ -102,40 +102,27 @@ export const PaymentStatusModal: React.FC<PaymentStatusModalProps> = ({
       title="Update Payment Status"
       description={`Record or update payment receipt for ${title}. Total: ${formatPKR(totalAmount)}`}
       confirmText="Update Payment"
-      icon={<CreditCard size={22} />}
-      variant={
-        status === "paid"
-          ? "success"
-          : status === "late_paid"
-          ? "warning"
-          : status === "unpaid"
-          ? "danger"
-          : "info"
-      }
+      icon={<CreditCard size={18} />}
       isLoading={isLoading}
     >
       <div className="space-y-4 pt-2">
         {error && (
-          <div className="p-3 text-xs rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-300">
+          <div className="p-3 text-xs rounded-xl bg-zinc-900 border border-white/20 text-white">
             {error}
           </div>
         )}
 
-        <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.08] flex items-center justify-between text-xs">
+        <div className="p-3.5 rounded-xl bg-zinc-950 border border-white/10 flex items-center justify-between text-xs">
           <div>
-            <span className="text-slate-400 block">Total Due Amount</span>
-            <span className="text-base font-bold text-white">
+            <span className="text-zinc-400 block text-[11px]">Total Due Amount</span>
+            <span className="text-sm font-bold text-white">
               {formatPKR(totalAmount)}
             </span>
           </div>
 
           <div className="text-right">
-            <span className="text-slate-400 block">Remaining Balance</span>
-            <span
-              className={`text-base font-bold ${
-                remainingBalance === 0 ? "text-emerald-400" : "text-amber-400"
-              }`}
-            >
+            <span className="text-zinc-400 block text-[11px]">Remaining Balance</span>
+            <span className="text-sm font-bold text-white">
               {formatPKR(remainingBalance)}
             </span>
           </div>
@@ -151,25 +138,25 @@ export const PaymentStatusModal: React.FC<PaymentStatusModalProps> = ({
               value: "paid",
               label: "Paid Complete",
               description: "Full amount received on time",
-              icon: <CheckCircle2 size={15} className="text-emerald-400" />,
+              icon: <CheckCircle2 size={14} className="text-zinc-400" />,
             },
             {
               value: "late_paid",
               label: "Late Paid",
               description: "Paid after cycle reset / due date",
-              icon: <Clock size={15} className="text-amber-400" />,
+              icon: <Clock size={14} className="text-zinc-400" />,
             },
             {
               value: "partial",
               label: "Paid Partial Amount",
               description: "Partially settled, remaining balance pending",
-              icon: <PieChart size={15} className="text-indigo-400" />,
+              icon: <PieChart size={14} className="text-zinc-400" />,
             },
             {
               value: "unpaid",
               label: "Unpaid / Due",
               description: "Payment has not yet been received",
-              icon: <AlertCircle size={15} className="text-rose-400" />,
+              icon: <AlertCircle size={14} className="text-zinc-400" />,
             },
           ]}
         />

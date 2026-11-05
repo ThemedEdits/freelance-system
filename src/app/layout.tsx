@@ -22,13 +22,13 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/logo.png" />
       </head>
-      <body className="min-h-screen bg-[#06080d] text-slate-100 flex flex-col antialiased selection:bg-cyan-500/30 selection:text-cyan-200">
-        <div className="flex min-h-screen w-full">
-          {/* Desktop Glass Sidebar */}
+      <body className="min-h-screen bg-black text-zinc-100 flex flex-col antialiased selection:bg-white selection:text-black">
+        <div className="flex min-h-screen w-full bg-black">
+          {/* Desktop Sidebar */}
           <Sidebar />
 
           {/* Main Content Area */}
-          <div className="flex-1 flex flex-col min-w-0">
+          <div className="flex-1 flex flex-col min-w-0 bg-black">
             {/* Mobile Navigation Header & Slide Drawer */}
             <MobileNav />
 

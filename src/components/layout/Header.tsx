@@ -2,15 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import {
-  Bell,
-  Plus,
-  FilePlus,
-  Briefcase,
-  Users,
-  Search,
-  Sparkles,
-} from "lucide-react";
+import { Bell, Plus, FilePlus, Briefcase } from "lucide-react";
 import { AppNotification } from "@/lib/types";
 
 interface HeaderProps {
@@ -26,7 +18,6 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenNewClient,
   onOpenNewProject,
 }) => {
-  const [notifications, setNotifications] = useState<AppNotification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
@@ -35,7 +26,6 @@ export const Header: React.FC<HeaderProps> = ({
         const res = await fetch("/api/notifications");
         if (res.ok) {
           const data = await res.json();
-          setNotifications(data.notifications || []);
           setUnreadCount(
             (data.notifications || []).filter(
               (n: AppNotification) => n.is_read === 0
@@ -50,74 +40,65 @@ export const Header: React.FC<HeaderProps> = ({
   }, []);
 
   return (
-    <header className="sticky top-0 z-20 flex items-center justify-between px-6 py-4 bg-[#090d16]/80 backdrop-blur-xl border-b border-white/[0.06]">
-      <div>
-        {title ? (
-          <div>
-            <h1 className="text-xl font-bold text-white tracking-tight">
-              {title}
-            </h1>
-            {subtitle && (
-              <p className="text-xs text-slate-400 mt-0.5">{subtitle}</p>
-            )}
-          </div>
-        ) : (
-          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-slate-400">
-            <span className="text-cyan-400">Themed Edits</span>
-            <span className="text-slate-600">•</span>
-            <span>Workspace</span>
-          </div>
+    <div className="relative w-full flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 sm:pb-6 border-b border-white/10">
+      <div className="min-w-0 flex-1">
+        {title && (
+          <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+            {title}
+          </h1>
+        )}
+        {subtitle && (
+          <p className="text-xs text-zinc-400 mt-0.5 leading-relaxed">
+            {subtitle}
+          </p>
         )}
       </div>
 
-      <div className="flex items-center gap-3">
-        {/* Quick Action: New Project */}
+      <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap shrink-0">
         {onOpenNewProject && (
           <button
             type="button"
             onClick={onOpenNewProject}
-            className="hidden sm:inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold bg-white/[0.04] hover:bg-white/[0.08] text-slate-200 hover:text-white border border-white/[0.08] transition-all active:scale-95"
+            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-white/10 transition-colors"
           >
-            <Briefcase size={14} className="text-purple-400" />
+            <Briefcase size={14} className="text-zinc-400" />
             <span>New Project</span>
           </button>
         )}
 
-        {/* Quick Action: Add Client */}
         {onOpenNewClient && (
           <button
             type="button"
             onClick={onOpenNewClient}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold shadow-lg shadow-cyan-950/50 transition-all active:scale-95"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold bg-white text-black hover:bg-zinc-200 transition-colors shadow-sm"
           >
-            <Plus size={14} strokeWidth={3} />
+            <Plus size={14} strokeWidth={2.5} />
             <span>Add Client</span>
           </button>
         )}
 
-        {/* Invoice shortcut */}
         <Link
           href="/invoices/new"
-          className="hidden md:inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold bg-white/[0.04] hover:bg-white/[0.08] text-slate-200 hover:text-white border border-white/[0.08] transition-all"
+          className="hidden md:inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-white/10 transition-colors"
         >
-          <FilePlus size={14} className="text-cyan-400" />
+          <FilePlus size={14} className="text-zinc-400" />
           <span>New Invoice</span>
         </Link>
 
-        {/* Notifications Icon with Badge */}
+        {/* Desktop notification bell */}
         <Link
           href="/notifications"
           aria-label="View notifications"
-          className="relative p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-slate-300 hover:text-cyan-400 transition-all"
+          className="relative hidden lg:flex p-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-white/10 text-zinc-400 hover:text-white transition-colors"
         >
-          <Bell size={17} />
+          <Bell size={16} />
           {unreadCount > 0 && (
-            <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-rose-500 text-[9px] font-bold text-white shadow-[0_0_8px_rgba(244,63,94,0.6)]">
+            <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-white text-[9px] font-bold text-black">
               {unreadCount}
             </span>
           )}
         </Link>
       </div>
-    </header>
+    </div>
   );
 };

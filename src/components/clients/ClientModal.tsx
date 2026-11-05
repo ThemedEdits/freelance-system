@@ -97,13 +97,12 @@ export const ClientModal: React.FC<ClientModalProps> = ({
       title={clientToEdit ? "Edit Client Details" : "Add New Client"}
       description="Create a client record with specific billing model, service category, and monthly cycle reset day."
       confirmText={clientToEdit ? "Save Changes" : "Create Client"}
-      icon={<UserPlus size={22} />}
-      variant="info"
+      icon={<UserPlus size={18} />}
       isLoading={isLoading}
     >
       <div className="space-y-4 pt-2">
         {error && (
-          <div className="p-3 text-xs rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-300">
+          <div className="p-3 text-xs rounded-xl bg-zinc-900 border border-white/20 text-white">
             {error}
           </div>
         )}
@@ -149,19 +148,19 @@ export const ClientModal: React.FC<ClientModalProps> = ({
                 value: "graphic_design",
                 label: "Graphic Design",
                 description: "Social posts, branding, reels",
-                icon: <Palette size={14} className="text-cyan-400" />,
+                icon: <Palette size={14} className="text-zinc-400" />,
               },
               {
                 value: "web_development",
                 label: "Website Development",
                 description: "Landing pages, websites, CMS",
-                icon: <Globe size={14} className="text-purple-400" />,
+                icon: <Globe size={14} className="text-zinc-400" />,
               },
               {
                 value: "software_engineering",
                 label: "Software Engineering",
                 description: "Custom apps, APIs, systems",
-                icon: <Code2 size={14} className="text-emerald-400" />,
+                icon: <Code2 size={14} className="text-zinc-400" />,
               },
             ]}
           />
@@ -192,9 +191,9 @@ export const ClientModal: React.FC<ClientModalProps> = ({
 
         {/* Monthly Retainer fields if Monthly or Hybrid */}
         {isMonthly && (
-          <div className="p-4 rounded-xl bg-slate-900/60 border border-white/[0.08] space-y-3.5 animate-fadeIn">
-            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-cyan-400">
-              <Calendar size={14} />
+          <div className="p-4 rounded-xl bg-zinc-950 border border-white/10 space-y-3.5">
+            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-zinc-300">
+              <Calendar size={14} className="text-zinc-400" />
               <span>Monthly Retainer & Cycle Reset Settings</span>
             </div>
 
@@ -216,7 +215,7 @@ export const ClientModal: React.FC<ClientModalProps> = ({
                   max={31}
                   suffix="th"
                 />
-                <span className="text-[11px] text-slate-400 mt-1 block">
+                <span className="text-[11px] text-zinc-400 mt-1 block">
                   e.g. 1st, 6th, 18th, 21st of every month
                 </span>
               </div>

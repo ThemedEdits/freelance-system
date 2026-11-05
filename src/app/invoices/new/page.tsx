@@ -4,20 +4,12 @@ import React, { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import {
-  FileText,
-  FilePlus,
   Printer,
   Save,
   ChevronLeft,
-  Settings,
   Eye,
-  Calendar,
-  DollarSign,
-  Tag,
-  Check,
   Building2,
 } from "lucide-react";
-import { Header } from "@/components/layout/Header";
 import { FloatingInput } from "@/components/ui/FloatingInput";
 import { FloatingTextarea } from "@/components/ui/FloatingTextarea";
 import { CustomSelect } from "@/components/ui/CustomSelect";
@@ -210,35 +202,35 @@ function NewInvoiceContent() {
   };
 
   return (
-    <div className="space-y-6 animate-fadeIn pb-16">
+    <div className="space-y-6 pb-16">
       {/* Top Header & Breadcrumbs */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div>
           <Link
             href="/invoices"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-white transition-colors mb-1"
+            className="inline-flex items-center gap-1 text-xs font-medium text-zinc-400 hover:text-white transition-colors mb-1"
           >
-            <ChevronLeft size={16} />
+            <ChevronLeft size={14} />
             <span>Back to Invoices</span>
           </Link>
           <h1 className="text-xl font-bold text-white tracking-tight">
             Create Branded Invoice
           </h1>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-zinc-400">
             Generate customized invoice with live post deliverable calculations and bank details
           </p>
         </div>
 
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2 flex-wrap">
           {/* Mobile view toggle */}
-          <div className="flex xl:hidden rounded-xl bg-slate-900 border border-white/[0.08] p-1">
+          <div className="flex xl:hidden rounded-lg bg-zinc-900 border border-white/10 p-1">
             <button
               type="button"
               onClick={() => setActiveTab("editor")}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold ${
+              className={`px-3 py-1.5 rounded-md text-xs font-medium ${
                 activeTab === "editor"
-                  ? "bg-cyan-500/20 text-cyan-300"
-                  : "text-slate-400"
+                  ? "bg-white text-black font-semibold"
+                  : "text-zinc-400"
               }`}
             >
               Configure
@@ -246,10 +238,10 @@ function NewInvoiceContent() {
             <button
               type="button"
               onClick={() => setActiveTab("preview")}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold ${
+              className={`px-3 py-1.5 rounded-md text-xs font-medium ${
                 activeTab === "preview"
-                  ? "bg-cyan-500/20 text-cyan-300"
-                  : "text-slate-400"
+                  ? "bg-white text-black font-semibold"
+                  : "text-zinc-400"
               }`}
             >
               Live Preview
@@ -259,7 +251,7 @@ function NewInvoiceContent() {
           <button
             type="button"
             onClick={() => window.print()}
-            className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold bg-white/[0.04] hover:bg-white/[0.08] text-slate-200 border border-white/[0.08] transition-all"
+            className="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-white/10 transition-colors"
           >
             <Printer size={14} />
             <span>Print / PDF</span>
@@ -269,7 +261,7 @@ function NewInvoiceContent() {
             type="button"
             disabled={isSaving || !selectedClientId}
             onClick={handleSaveInvoice}
-            className="inline-flex items-center gap-2 px-5 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 shadow-lg shadow-cyan-950/40 transition-all active:scale-95 disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-white text-black hover:bg-zinc-200 transition-colors shadow-sm disabled:opacity-50"
           >
             <Save size={14} />
             <span>{isSaving ? "Saving..." : "Save & Generate"}</span>
@@ -278,17 +270,17 @@ function NewInvoiceContent() {
       </div>
 
       {/* Main Grid: Controls vs Live Document */}
-      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-5 sm:gap-6 items-start">
         {/* Left Column: Customization Controls */}
         <div
-          className={`xl:col-span-5 space-y-5 ${
+          className={`xl:col-span-5 space-y-4 ${
             activeTab === "preview" ? "hidden xl:block" : "block"
           }`}
         >
           {/* Client & Scope Selection */}
-          <div className="p-5 rounded-2xl glass-card border border-white/[0.08] space-y-4">
-            <h3 className="text-sm font-bold uppercase tracking-wider text-cyan-400 flex items-center gap-2">
-              <Building2 size={16} />
+          <div className="p-4 sm:p-5 rounded-xl bg-zinc-950 border border-white/10 space-y-4">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-300 flex items-center gap-2">
+              <Building2 size={15} className="text-zinc-400" />
               <span>Client & Scope Selection</span>
             </h3>
 
@@ -308,20 +300,20 @@ function NewInvoiceContent() {
 
             {/* Mode: Project vs Client */}
             <div className="space-y-1.5">
-              <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 block">
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-zinc-400 block">
                 Invoice Generation Scope
               </span>
               <div className="grid grid-cols-2 gap-2">
                 <button
                   type="button"
                   onClick={() => setGenerationMode("project")}
-                  className={`p-3 rounded-xl border text-xs font-semibold transition-all text-left ${
+                  className={`p-2.5 rounded-lg border text-xs font-medium transition-colors text-left ${
                     generationMode === "project"
-                      ? "bg-cyan-500/15 border-cyan-500/40 text-cyan-300 shadow-sm"
-                      : "bg-slate-900/40 border-white/[0.06] text-slate-400 hover:text-white"
+                      ? "bg-white text-black font-semibold border-white"
+                      : "bg-black border-white/10 text-zinc-400 hover:text-white"
                   }`}
                 >
-                  <span className="block font-bold">Specific Project</span>
+                  <span className="block font-semibold">Specific Project</span>
                   <span className="text-[10px] font-normal opacity-75">
                     Generate for one project
                   </span>
@@ -330,13 +322,13 @@ function NewInvoiceContent() {
                 <button
                   type="button"
                   onClick={() => setGenerationMode("client")}
-                  className={`p-3 rounded-xl border text-xs font-semibold transition-all text-left ${
+                  className={`p-2.5 rounded-lg border text-xs font-medium transition-colors text-left ${
                     generationMode === "client"
-                      ? "bg-cyan-500/15 border-cyan-500/40 text-cyan-300 shadow-sm"
-                      : "bg-slate-900/40 border-white/[0.06] text-slate-400 hover:text-white"
+                      ? "bg-white text-black font-semibold border-white"
+                      : "bg-black border-white/10 text-zinc-400 hover:text-white"
                   }`}
                 >
-                  <span className="block font-bold">All Client Projects</span>
+                  <span className="block font-semibold">All Client Projects</span>
                   <span className="text-[10px] font-normal opacity-75">
                     Consolidated invoice
                   </span>
@@ -360,8 +352,8 @@ function NewInvoiceContent() {
           </div>
 
           {/* Toggle Switches (Requested in prompt!) */}
-          <div className="p-5 rounded-2xl glass-card border border-white/[0.08] space-y-3">
-            <h3 className="text-sm font-bold uppercase tracking-wider text-cyan-400">
+          <div className="p-4 sm:p-5 rounded-xl bg-zinc-950 border border-white/10 space-y-3">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-300">
               Invoice Customization Toggles
             </h3>
 
@@ -380,8 +372,8 @@ function NewInvoiceContent() {
             {/* Toggle 2: Include Monthly Retainer (on choice!) */}
             {selectedClient && selectedClient.monthly_amount > 0 && (
               <CustomToggle
-                label="Include Monthly Retainer (Rs. "
-                sublabel={`Appends the fixed ${formatPKR(selectedClient.monthly_amount)} monthly retainer fee to this invoice.`}
+                label={`Include Monthly Retainer (${formatPKR(selectedClient.monthly_amount)})`}
+                sublabel="Appends the fixed monthly retainer fee to this invoice."
                 checked={includeMonthlyRetainer}
                 onChange={setIncludeMonthlyRetainer}
               />
@@ -397,8 +389,8 @@ function NewInvoiceContent() {
           </div>
 
           {/* Dates & Discounts */}
-          <div className="p-5 rounded-2xl glass-card border border-white/[0.08] space-y-4">
-            <h3 className="text-sm font-bold uppercase tracking-wider text-cyan-400">
+          <div className="p-4 sm:p-5 rounded-xl bg-zinc-950 border border-white/10 space-y-4">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-300">
               Dates, Discounts & Notes
             </h3>
 
@@ -417,17 +409,17 @@ function NewInvoiceContent() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 items-end">
               <div>
-                <span className="block mb-1.5 text-xs font-semibold uppercase tracking-wider text-slate-400">
+                <span className="block mb-1 text-[11px] font-semibold uppercase tracking-wider text-zinc-400">
                   Discount Type
                 </span>
-                <div className="flex rounded-xl bg-slate-900 border border-white/[0.08] p-1">
+                <div className="flex rounded-lg bg-black border border-white/10 p-1">
                   <button
                     type="button"
                     onClick={() => setDiscountType("fixed")}
-                    className={`flex-1 py-1.5 text-xs font-semibold rounded-lg ${
+                    className={`flex-1 py-1.5 text-xs font-medium rounded ${
                       discountType === "fixed"
-                        ? "bg-cyan-500/20 text-cyan-300"
-                        : "text-slate-400"
+                        ? "bg-white text-black font-semibold"
+                        : "text-zinc-400"
                     }`}
                   >
                     Fixed (Rs)
@@ -435,10 +427,10 @@ function NewInvoiceContent() {
                   <button
                     type="button"
                     onClick={() => setDiscountType("percentage")}
-                    className={`flex-1 py-1.5 text-xs font-semibold rounded-lg ${
+                    className={`flex-1 py-1.5 text-xs font-medium rounded ${
                       discountType === "percentage"
-                        ? "bg-cyan-500/20 text-cyan-300"
-                        : "text-slate-400"
+                        ? "bg-white text-black font-semibold"
+                        : "text-zinc-400"
                     }`}
                   >
                     Percent (%)
@@ -470,12 +462,12 @@ function NewInvoiceContent() {
           }`}
         >
           <div className="sticky top-20">
-            <div className="flex items-center justify-between pb-3 px-2 text-xs text-slate-400">
+            <div className="flex items-center justify-between pb-3 px-1 text-xs text-zinc-400">
               <span className="flex items-center gap-1.5">
-                <Eye size={14} className="text-cyan-400" />
+                <Eye size={14} className="text-zinc-400" />
                 <span>Live Invoice Document Preview</span>
               </span>
-              <span className="font-mono text-cyan-300 font-bold">
+              <span className="font-mono text-zinc-300 font-medium">
                 {itemsToInclude.length} deliverable item(s) included
               </span>
             </div>
@@ -509,7 +501,7 @@ function NewInvoiceContent() {
                 settings={companySettings || undefined}
               />
             ) : (
-              <div className="p-12 text-center rounded-2xl glass-card text-slate-400">
+              <div className="p-12 text-center rounded-xl bg-zinc-950 border border-white/10 text-zinc-400 text-xs">
                 Please select a client to preview the invoice.
               </div>
             )}
@@ -522,7 +514,7 @@ function NewInvoiceContent() {
 
 export default function NewInvoicePage() {
   return (
-    <Suspense fallback={<div className="p-8 text-center text-slate-400">Loading invoice generator...</div>}>
+    <Suspense fallback={<div className="p-8 text-center text-zinc-400">Loading invoice generator...</div>}>
       <NewInvoiceContent />
     </Suspense>
   );

@@ -17,7 +17,6 @@ import {
   Code2,
   ChevronRight,
 } from "lucide-react";
-import { motion } from "framer-motion";
 
 interface SidebarProps {
   unreadNotificationsCount?: number;
@@ -32,38 +31,38 @@ export const Sidebar: React.FC<SidebarProps> = ({
     {
       label: "Dashboard",
       href: "/",
-      icon: <LayoutDashboard size={18} />,
+      icon: <LayoutDashboard size={16} />,
     },
     {
       label: "Clients",
       href: "/clients",
-      icon: <Users size={18} />,
+      icon: <Users size={16} />,
     },
     {
       label: "Projects & Posts",
       href: "/projects",
-      icon: <Briefcase size={18} />,
+      icon: <Briefcase size={16} />,
     },
     {
       label: "Monthly Cycles",
       href: "/cycles",
-      icon: <CalendarClock size={18} />,
+      icon: <CalendarClock size={16} />,
     },
     {
       label: "Invoices",
       href: "/invoices",
-      icon: <FileText size={18} />,
+      icon: <FileText size={16} />,
     },
     {
       label: "Notifications",
       href: "/notifications",
-      icon: <Bell size={18} />,
+      icon: <Bell size={16} />,
       badge: unreadNotificationsCount > 0 ? unreadNotificationsCount : null,
     },
     {
       label: "Settings",
       href: "/settings",
-      icon: <Settings size={18} />,
+      icon: <Settings size={16} />,
     },
   ];
 
@@ -71,51 +70,48 @@ export const Sidebar: React.FC<SidebarProps> = ({
     {
       name: "Graphic Design",
       href: "/clients?category=graphic_design",
-      icon: <Palette size={14} className="text-cyan-400" />,
-      color: "border-cyan-500/20 text-cyan-300",
+      icon: <Palette size={13} className="text-zinc-400" />,
     },
     {
       name: "Web Development",
       href: "/clients?category=web_development",
-      icon: <Globe size={14} className="text-purple-400" />,
-      color: "border-purple-500/20 text-purple-300",
+      icon: <Globe size={13} className="text-zinc-400" />,
     },
     {
       name: "Software Clients",
       href: "/clients?category=software_engineering",
-      icon: <Code2 size={14} className="text-emerald-400" />,
-      color: "border-emerald-500/20 text-emerald-300",
+      icon: <Code2 size={13} className="text-zinc-400" />,
     },
   ];
 
   return (
-    <aside className="hidden lg:flex flex-col w-64 h-screen sticky top-0 bg-[#090d16]/90 backdrop-blur-2xl border-r border-white/[0.08] z-30 select-none">
+    <aside className="hidden lg:flex flex-col w-64 h-screen sticky top-0 bg-black border-r border-white/10 z-30 select-none">
       {/* Brand Header */}
-      <div className="flex items-center gap-3.5 px-6 py-5 border-b border-white/[0.06]">
-        <div className="relative w-10 h-10 rounded-xl overflow-hidden bg-slate-900 border border-white/[0.1] shadow-[0_0_15px_rgba(0,229,255,0.15)] shrink-0 flex items-center justify-center">
+      <div className="flex items-center gap-3 px-5 py-4 border-b border-white/10">
+        <div className="relative w-8 h-8 rounded-lg overflow-hidden bg-zinc-950 border border-white/15 shrink-0 flex items-center justify-center">
           <Image
             src="/logo.png"
             alt="Themed Edits Logo"
-            width={40}
-            height={40}
-            className="object-contain p-1"
+            width={32}
+            height={32}
+            className="object-contain p-0.5"
             priority
           />
         </div>
         <div className="flex flex-col overflow-hidden">
-          <span className="text-base font-bold text-white tracking-tight flex items-center gap-1.5">
+          <span className="text-sm font-semibold text-white tracking-tight leading-none">
             Themed Edits
           </span>
-          <span className="text-[11px] font-medium text-cyan-400 uppercase tracking-widest truncate">
+          <span className="text-[10px] font-medium text-zinc-400 uppercase tracking-wider mt-1">
             Client Hub
           </span>
         </div>
       </div>
 
       {/* Main Navigation */}
-      <div className="flex-1 overflow-y-auto px-3.5 py-5 space-y-6">
+      <div className="flex-1 overflow-y-auto px-3 py-4 space-y-6">
         <div>
-          <span className="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-500 block mb-2">
+          <span className="px-3 text-[10px] font-semibold uppercase tracking-wider text-zinc-400 block mb-2">
             Main Menu
           </span>
           <nav className="space-y-1">
@@ -129,19 +125,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`relative flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all group ${
+                  className={`relative flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-colors ${
                     isActive
-                      ? "text-white bg-gradient-to-r from-cyan-500/15 to-blue-500/10 border border-cyan-500/30 shadow-[0_0_15px_rgba(0,229,255,0.12)]"
-                      : "text-slate-400 hover:text-white hover:bg-white/[0.04]"
+                      ? "text-white bg-zinc-900 border border-white/15"
+                      : "text-zinc-400 hover:text-white hover:bg-zinc-900/60"
                   }`}
                 >
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2.5">
                     <span
-                      className={`transition-colors ${
-                        isActive
-                          ? "text-cyan-400"
-                          : "text-slate-400 group-hover:text-cyan-300"
-                      }`}
+                      className={
+                        isActive ? "text-white" : "text-zinc-400"
+                      }
                     >
                       {item.icon}
                     </span>
@@ -149,17 +143,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   </div>
 
                   {item.badge !== null && item.badge !== undefined && (
-                    <span className="px-2 py-0.5 text-[10px] font-bold rounded-full bg-rose-500 text-white shadow-[0_0_8px_rgba(244,63,94,0.5)]">
+                    <span className="px-1.5 py-0.2 text-[9px] font-bold rounded bg-white text-black">
                       {item.badge}
                     </span>
-                  )}
-
-                  {isActive && (
-                    <motion.div
-                      layoutId="active-pill"
-                      className="absolute left-0 top-2 bottom-2 w-1 rounded-r-full bg-cyan-400 shadow-[0_0_8px_#00E5FF]"
-                      transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                    />
                   )}
                 </Link>
               );
@@ -169,23 +155,23 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
         {/* Divisions / Services */}
         <div>
-          <span className="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-500 block mb-2">
+          <span className="px-3 text-[10px] font-semibold uppercase tracking-wider text-zinc-400 block mb-2">
             Services Division
           </span>
-          <div className="space-y-1.5">
+          <div className="space-y-1">
             {serviceCategories.map((cat) => (
               <Link
                 key={cat.name}
                 href={cat.href}
-                className="flex items-center justify-between px-3 py-2 rounded-lg bg-white/[0.02] hover:bg-white/[0.06] border border-white/[0.04] text-xs font-medium text-slate-300 hover:text-white transition-all group"
+                className="flex items-center justify-between px-3 py-2 rounded-lg bg-zinc-950 hover:bg-zinc-900 border border-white/5 hover:border-white/10 text-xs font-medium text-zinc-400 hover:text-white transition-colors"
               >
-                <div className="flex items-center gap-2.5">
+                <div className="flex items-center gap-2">
                   {cat.icon}
                   <span>{cat.name}</span>
                 </div>
                 <ChevronRight
                   size={12}
-                  className="text-slate-500 group-hover:text-cyan-400 transition-transform group-hover:translate-x-0.5"
+                  className="text-zinc-400"
                 />
               </Link>
             ))}
@@ -194,10 +180,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </div>
 
       {/* Footer Info */}
-      <div className="p-4 border-t border-white/[0.06] bg-slate-950/40">
-        <div className="flex items-center justify-between text-xs text-slate-400">
-          <span className="text-[11px] text-slate-500">Design • Web • Code</span>
-          <span className="px-1.5 py-0.5 text-[10px] font-semibold rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+      <div className="p-4 border-t border-white/10 bg-black">
+        <div className="flex items-center justify-between text-xs text-zinc-400">
+          <span className="text-[11px] text-zinc-400">Design • Web • Code</span>
+          <span className="px-1.5 py-0.5 text-[10px] font-semibold rounded bg-zinc-900 text-zinc-300 border border-white/10">
             PKR
           </span>
         </div>

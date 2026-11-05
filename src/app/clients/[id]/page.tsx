@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import {
-  Users,
   Calendar,
   Briefcase,
   FileText,
@@ -14,13 +13,9 @@ import {
   Mail,
   Edit2,
   Trash2,
-  Clock,
-  CheckCircle2,
-  AlertCircle,
   ExternalLink,
   ChevronLeft,
 } from "lucide-react";
-import { Header } from "@/components/layout/Header";
 import { CustomBadge } from "@/components/ui/CustomBadge";
 import { ClientModal } from "@/components/clients/ClientModal";
 import { ProjectModal } from "@/components/projects/ProjectModal";
@@ -109,14 +104,14 @@ export default function ClientDetailPage() {
     client.billing_type === "monthly" || client.billing_type === "hybrid";
 
   return (
-    <div className="space-y-8 animate-fadeIn pb-12">
+    <div className="space-y-6 pb-12">
       {/* Back Button & Top Navigation */}
       <div className="flex items-center justify-between">
         <Link
           href="/clients"
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-white transition-colors"
+          className="inline-flex items-center gap-1 text-xs font-medium text-zinc-400 hover:text-white transition-colors"
         >
-          <ChevronLeft size={16} />
+          <ChevronLeft size={14} />
           <span>Back to Clients</span>
         </Link>
 
@@ -124,7 +119,7 @@ export default function ClientDetailPage() {
           <button
             type="button"
             onClick={() => setIsEditModalOpen(true)}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-white/[0.04] hover:bg-white/[0.08] text-slate-300 hover:text-white border border-white/[0.08] transition-all"
+            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-white/10 transition-colors"
           >
             <Edit2 size={13} />
             <span>Edit Profile</span>
@@ -133,71 +128,71 @@ export default function ClientDetailPage() {
           <button
             type="button"
             onClick={() => setIsDeleteModalOpen(true)}
-            className="p-1.5 rounded-xl text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors"
+            className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-900 transition-colors"
             title="Delete client"
           >
-            <Trash2 size={16} />
+            <Trash2 size={15} />
           </button>
         </div>
       </div>
 
       {/* Client Profile Header Card */}
-      <div className="p-6 sm:p-8 rounded-2xl glass-card border border-white/[0.08] relative overflow-hidden">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 pb-6 border-b border-white/[0.08]">
-          <div>
-            <div className="flex items-center gap-2.5 mb-2">
+      <div className="p-5 sm:p-6 rounded-xl bg-zinc-950 border border-white/10 space-y-5">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-5 border-b border-white/10">
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-1.5 mb-2 flex-wrap">
               <CustomBadge type={client.category} size="md" />
               <CustomBadge type={client.billing_type} size="md" />
             </div>
 
-            <h1 className="text-2xl font-black text-white tracking-tight">
+            <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
               {client.business_name || client.name}
             </h1>
             {client.business_name && (
-              <p className="text-sm text-slate-400 mt-0.5">
+              <p className="text-xs text-zinc-400 mt-0.5">
                 Primary Contact: {client.name}
               </p>
             )}
 
-            <div className="mt-3 flex items-center gap-4 text-xs text-slate-400 flex-wrap">
+            <div className="mt-2.5 flex items-center gap-4 text-xs text-zinc-400 flex-wrap">
               {client.phone && (
                 <a
                   href={`https://wa.me/${client.phone.replace(/[^0-9]/g, "")}`}
                   target="_blank"
                   rel="noreferrer"
-                  className="flex items-center gap-1.5 hover:text-emerald-400 transition-colors"
+                  className="flex items-center gap-1.5 hover:text-white transition-colors"
                 >
-                  <Phone size={13} className="text-emerald-400" />
+                  <Phone size={13} className="text-zinc-400" />
                   <span>{client.phone} (WhatsApp)</span>
                 </a>
               )}
               {client.email && (
                 <a
                   href={`mailto:${client.email}`}
-                  className="flex items-center gap-1.5 hover:text-cyan-400 transition-colors"
+                  className="flex items-center gap-1.5 hover:text-white transition-colors"
                 >
-                  <Mail size={13} className="text-cyan-400" />
+                  <Mail size={13} className="text-zinc-400" />
                   <span>{client.email}</span>
                 </a>
               )}
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2 shrink-0">
             <button
               type="button"
               onClick={() => setIsProjectModalOpen(true)}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold bg-white/[0.04] hover:bg-white/[0.08] text-slate-200 hover:text-white border border-white/[0.08] transition-all"
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-white/10 transition-colors"
             >
-              <Briefcase size={14} className="text-purple-400" />
+              <Briefcase size={14} className="text-zinc-400" />
               <span>Add Project</span>
             </button>
 
             <Link
               href={`/invoices/new?client_id=${client.id}`}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold shadow-lg shadow-cyan-950/40 transition-all active:scale-95"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold bg-white text-black hover:bg-zinc-200 transition-colors shadow-sm"
             >
-              <FilePlus size={14} strokeWidth={2.5} />
+              <FilePlus size={14} />
               <span>Generate Invoice</span>
             </Link>
           </div>
@@ -205,31 +200,31 @@ export default function ClientDetailPage() {
 
         {/* Retainer & Reset Day Highlights */}
         {isMonthly && (
-          <div className="pt-6 grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
-            <div className="p-4 rounded-xl bg-white/[0.03] border border-white/[0.06]">
-              <span className="text-xs text-slate-400 block mb-1">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+            <div className="p-3.5 rounded-lg bg-black border border-white/10">
+              <span className="text-zinc-400 block mb-1">
                 Fixed Monthly Retainer
               </span>
-              <span className="text-xl font-bold text-white">
+              <span className="text-lg font-bold text-white">
                 {formatPKR(client.monthly_amount)}
               </span>
             </div>
 
-            <div className="p-4 rounded-xl bg-white/[0.03] border border-white/[0.06]">
-              <span className="text-xs text-slate-400 block mb-1">
+            <div className="p-3.5 rounded-lg bg-black border border-white/10">
+              <span className="text-zinc-400 block mb-1">
                 Cycle Reset Day
               </span>
-              <span className="text-xl font-bold text-cyan-400">
-                {client.cycle_reset_day}th of every month
+              <span className="text-lg font-bold text-white">
+                {client.cycle_reset_day}th of month
               </span>
             </div>
 
-            <div className="p-4 rounded-xl bg-white/[0.03] border border-white/[0.06]">
-              <span className="text-xs text-slate-400 block mb-1">
+            <div className="p-3.5 rounded-lg bg-black border border-white/10">
+              <span className="text-zinc-400 block mb-1">
                 Active Cycle Count
               </span>
-              <span className="text-xl font-bold text-slate-200">
-                {cycles.length} billing periods
+              <span className="text-lg font-bold text-white">
+                {cycles.length} periods
               </span>
             </div>
           </div>
@@ -238,33 +233,33 @@ export default function ClientDetailPage() {
 
       {/* MONTHLY CYCLES TIMELINE */}
       {isMonthly && (
-        <div className="p-6 rounded-2xl glass-card border border-white/[0.08] space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
+        <div className="p-5 sm:p-6 rounded-xl bg-zinc-950 border border-white/10 space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-white/10">
             <div className="flex items-center gap-2">
-              <Calendar size={18} className="text-cyan-400" />
-              <h2 className="text-base font-bold text-white">
+              <Calendar size={16} className="text-zinc-400" />
+              <h2 className="text-sm sm:text-base font-bold text-white">
                 Monthly Billing Cycles History
               </h2>
             </div>
-            <span className="text-xs text-slate-400">
-              Resets automatically every month on day {client.cycle_reset_day}
+            <span className="text-xs text-zinc-400">
+              Resets on day {client.cycle_reset_day}
             </span>
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             {cycles.length === 0 ? (
-              <p className="text-xs text-slate-500 py-3 text-center">
+              <p className="text-xs text-zinc-400 py-4 text-center">
                 No monthly billing cycles generated yet.
               </p>
             ) : (
               cycles.map((cycle) => (
                 <div
                   key={cycle.id}
-                  className="p-4 rounded-xl bg-white/[0.02] hover:bg-white/[0.05] border border-white/[0.06] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 transition-all"
+                  className="p-3.5 rounded-xl bg-black border border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3"
                 >
                   <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <span className="font-bold text-white text-sm">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="font-semibold text-white text-sm">
                         {formatDate(cycle.period_start)} — {formatDate(cycle.period_end)}
                       </span>
                       <CustomBadge
@@ -275,8 +270,8 @@ export default function ClientDetailPage() {
                         }
                       />
                     </div>
-                    <div className="text-xs text-slate-400 flex items-center gap-3 flex-wrap">
-                      <span>Due Date: {formatDate(cycle.due_date)}</span>
+                    <div className="text-xs text-zinc-400 flex items-center gap-2 flex-wrap">
+                      <span>Due: {formatDate(cycle.due_date)}</span>
                       {cycle.paid_at && (
                         <span>• Paid on: {formatDate(cycle.paid_at)}</span>
                       )}
@@ -284,13 +279,13 @@ export default function ClientDetailPage() {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-3 shrink-0">
                     <div className="text-right">
                       <span className="text-sm font-bold text-white block">
                         {formatPKR(cycle.amount)}
                       </span>
                       {cycle.payment_status === "partial" && (
-                        <span className="text-[11px] text-indigo-400">
+                        <span className="text-[11px] text-zinc-400">
                           Paid: {formatPKR(cycle.paid_amount)}
                         </span>
                       )}
@@ -309,9 +304,9 @@ export default function ClientDetailPage() {
                           currentPaidAmount: cycle.paid_amount,
                         })
                       }
-                      className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white/[0.04] hover:bg-cyan-500/20 text-slate-300 hover:text-cyan-300 border border-white/[0.08] transition-colors"
+                      className="px-2.5 py-1.5 rounded-lg text-xs font-medium bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-white/10 transition-colors"
                     >
-                      Update Status
+                      Update
                     </button>
                   </div>
                 </div>
@@ -322,11 +317,11 @@ export default function ClientDetailPage() {
       )}
 
       {/* PROJECTS & DELIVERABLES */}
-      <div className="p-6 rounded-2xl glass-card border border-white/[0.08] space-y-4">
-        <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
+      <div className="p-5 sm:p-6 rounded-xl bg-zinc-950 border border-white/10 space-y-4">
+        <div className="flex items-center justify-between pb-3 border-b border-white/10">
           <div className="flex items-center gap-2">
-            <Briefcase size={18} className="text-purple-400" />
-            <h2 className="text-base font-bold text-white">
+            <Briefcase size={16} className="text-zinc-400" />
+            <h2 className="text-sm sm:text-base font-bold text-white">
               Projects & Post Deliverables
             </h2>
           </div>
@@ -334,56 +329,56 @@ export default function ClientDetailPage() {
           <button
             type="button"
             onClick={() => setIsProjectModalOpen(true)}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-cyan-500/15 text-cyan-300 hover:bg-cyan-500/25 transition-colors"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-white/10 transition-colors"
           >
             <Plus size={14} />
             <span>New Project</span>
           </button>
         </div>
 
-        <div className="space-y-3">
+        <div className="space-y-2.5">
           {projects.length === 0 ? (
-            <p className="text-xs text-slate-500 py-3 text-center">
+            <p className="text-xs text-zinc-400 py-4 text-center">
               No projects added for this client yet.
             </p>
           ) : (
             projects.map((project) => (
               <div
                 key={project.id}
-                className="p-4 rounded-xl bg-white/[0.02] hover:bg-white/[0.05] border border-white/[0.06] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 transition-all"
+                className="p-3.5 rounded-xl bg-black border border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3"
               >
-                <div>
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-bold text-white text-sm">{project.title}</h3>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <h3 className="font-semibold text-white text-sm">{project.title}</h3>
                     {project.is_extra_project === 1 && (
-                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-cyan-500/15 text-cyan-300 border border-cyan-500/20 font-semibold">
+                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-zinc-900 text-zinc-300 border border-white/10 font-medium">
                         Extra Project
                       </span>
                     )}
                   </div>
                   {project.description && (
-                    <p className="text-xs text-slate-400 mt-1 max-w-lg">
+                    <p className="text-xs text-zinc-400 mt-1 max-w-lg">
                       {project.description}
                     </p>
                   )}
-                  <div className="mt-2 flex items-center gap-2 text-xs">
+                  <div className="mt-2 flex items-center gap-2 text-xs flex-wrap">
                     <CustomBadge type={project.category} size="sm" />
                     <CustomBadge type={project.payment_status} size="sm" />
                     {project.due_date && (
-                      <span className="text-slate-400 text-[11px]">
+                      <span className="text-zinc-400 text-[11px]">
                         Due: {formatDate(project.due_date)}
                       </span>
                     )}
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 shrink-0">
                   <div className="text-right">
-                    <span className="text-base font-bold text-cyan-400 block">
+                    <span className="text-sm font-bold text-white block">
                       {formatPKR(project.total_amount)}
                     </span>
                     {project.paid_amount > 0 && (
-                      <span className="text-[11px] text-slate-400">
+                      <span className="text-[11px] text-zinc-400">
                         Paid: {formatPKR(project.paid_amount)}
                       </span>
                     )}
@@ -391,10 +386,10 @@ export default function ClientDetailPage() {
 
                   <Link
                     href={`/invoices/new?project_id=${project.id}`}
-                    className="p-2 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-slate-300 hover:text-white transition-colors"
+                    className="p-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white border border-white/10 transition-colors"
                     title="Generate Invoice for Project"
                   >
-                    <FilePlus size={16} className="text-cyan-400" />
+                    <FilePlus size={15} />
                   </Link>
 
                   <button
@@ -410,7 +405,7 @@ export default function ClientDetailPage() {
                         currentPaidAmount: project.paid_amount,
                       })
                     }
-                    className="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-white/[0.04] hover:bg-cyan-500/20 text-slate-300 hover:text-cyan-300 border border-white/[0.08] transition-colors"
+                    className="px-2.5 py-1.5 rounded-lg text-xs font-medium bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-white/10 transition-colors"
                   >
                     Payment
                   </button>
@@ -422,38 +417,38 @@ export default function ClientDetailPage() {
       </div>
 
       {/* INVOICES HISTORY */}
-      <div className="p-6 rounded-2xl glass-card border border-white/[0.08] space-y-4">
-        <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
+      <div className="p-5 sm:p-6 rounded-xl bg-zinc-950 border border-white/10 space-y-4">
+        <div className="flex items-center justify-between pb-3 border-b border-white/10">
           <div className="flex items-center gap-2">
-            <FileText size={18} className="text-cyan-400" />
-            <h2 className="text-base font-bold text-white">Invoices History</h2>
+            <FileText size={16} className="text-zinc-400" />
+            <h2 className="text-sm sm:text-base font-bold text-white">Invoices History</h2>
           </div>
 
           <Link
             href={`/invoices/new?client_id=${client.id}`}
-            className="text-xs font-semibold text-cyan-400 hover:text-cyan-300 flex items-center gap-1"
+            className="text-xs font-medium text-zinc-300 hover:text-white flex items-center gap-1"
           >
             <Plus size={14} />
             <span>Create Invoice</span>
           </Link>
         </div>
 
-        <div className="space-y-2.5">
+        <div className="space-y-2">
           {invoices.length === 0 ? (
-            <p className="text-xs text-slate-500 py-3 text-center">
+            <p className="text-xs text-zinc-400 py-4 text-center">
               No invoices generated for this client yet.
             </p>
           ) : (
             invoices.map((inv) => (
               <div
                 key={inv.id}
-                className="p-3.5 rounded-xl bg-white/[0.02] hover:bg-white/[0.05] border border-white/[0.06] flex items-center justify-between gap-3 transition-all"
+                className="p-3 rounded-xl bg-black border border-white/10 flex items-center justify-between gap-3"
               >
                 <div>
-                  <span className="font-bold text-sm text-cyan-300">
+                  <span className="font-semibold text-sm text-white">
                     {inv.invoice_number}
                   </span>
-                  <div className="text-xs text-slate-400 flex items-center gap-2 mt-0.5">
+                  <div className="text-xs text-zinc-400 flex items-center gap-2 mt-0.5">
                     <span>Issued: {formatDate(inv.issue_date)}</span>
                     <span>•</span>
                     <span>Due: {formatDate(inv.due_date)}</span>
@@ -465,14 +460,14 @@ export default function ClientDetailPage() {
                     <span className="text-sm font-bold text-white block">
                       {formatPKR(inv.grand_total)}
                     </span>
-                    <span className="text-[10px] uppercase font-bold text-slate-400">
+                    <span className="text-[10px] uppercase font-semibold text-zinc-400">
                       {inv.status}
                     </span>
                   </div>
 
                   <Link
                     href={`/invoices/${inv.id}`}
-                    className="p-2 rounded-lg bg-white/[0.04] hover:bg-cyan-500/20 text-slate-300 hover:text-cyan-300 transition-colors"
+                    className="p-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white border border-white/10 transition-colors"
                   >
                     <ExternalLink size={14} />
                   </Link>
