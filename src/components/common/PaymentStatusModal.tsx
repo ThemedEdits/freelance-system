@@ -17,6 +17,7 @@ interface PaymentStatusModalProps {
   entityType: "cycle" | "project";
   entityId: string;
   title: string;
+  subtitle?: string;
   totalAmount: number;
   currentStatus: PaymentStatus;
   currentPaidAmount: number;
@@ -30,6 +31,7 @@ export const PaymentStatusModal: React.FC<PaymentStatusModalProps> = ({
   entityType,
   entityId,
   title,
+  subtitle,
   totalAmount,
   currentStatus,
   currentPaidAmount,
@@ -113,12 +115,25 @@ export const PaymentStatusModal: React.FC<PaymentStatusModalProps> = ({
       onClose={onClose}
       onConfirm={handleConfirm}
       title="Update Payment Status"
-      description={`Record or update payment receipt for ${title}. Total: ${formatPKR(totalAmount)}`}
+      description={
+        subtitle
+          ? `Record payment for ${title} (${subtitle}). Total: ${formatPKR(totalAmount)}`
+          : `Record or update payment receipt for ${title}. Total: ${formatPKR(totalAmount)}`
+      }
       confirmText="Update Payment"
       icon={<CreditCard size={18} />}
       isLoading={isLoading}
     >
       <div className="space-y-4 pt-2">
+        {subtitle && (
+          <div className="p-3 rounded-xl bg-zinc-900 border border-white/10 text-xs text-zinc-300">
+            <span className="text-zinc-500 block text-[10px] font-semibold uppercase tracking-wider mb-0.5">
+              Service Period Billed (Arrears)
+            </span>
+            <span className="font-semibold text-white">{subtitle}</span>
+          </div>
+        )}
+
         {error && (
           <div className="p-3 text-xs rounded-xl bg-zinc-900 border border-white/20 text-white">
             {error}

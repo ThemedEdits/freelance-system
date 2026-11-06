@@ -45,6 +45,7 @@ export default function ClientDetailPage() {
     entityType: "cycle" | "project";
     entityId: string;
     title: string;
+    subtitle?: string;
     totalAmount: number;
     currentStatus: any;
     currentPaidAmount: number;
@@ -53,6 +54,7 @@ export default function ClientDetailPage() {
     entityType: "cycle",
     entityId: "",
     title: "",
+    subtitle: undefined,
     totalAmount: 0,
     currentStatus: "unpaid",
     currentPaidAmount: 0,
@@ -298,7 +300,8 @@ export default function ClientDetailPage() {
                           isOpen: true,
                           entityType: "cycle",
                           entityId: cycle.id,
-                          title: `Cycle ${cycle.period_start}`,
+                          title: client.business_name || client.name,
+                          subtitle: `${formatDate(cycle.period_start)} to ${formatDate(cycle.period_end)}`,
                           totalAmount: cycle.amount,
                           currentStatus: cycle.payment_status,
                           currentPaidAmount: cycle.paid_amount,
@@ -502,6 +505,7 @@ export default function ClientDetailPage() {
         entityType={paymentModalData.entityType}
         entityId={paymentModalData.entityId}
         title={paymentModalData.title}
+        subtitle={paymentModalData.subtitle}
         totalAmount={paymentModalData.totalAmount}
         currentStatus={paymentModalData.currentStatus}
         currentPaidAmount={paymentModalData.currentPaidAmount}

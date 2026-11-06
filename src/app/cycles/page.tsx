@@ -27,6 +27,7 @@ export default function CyclesPage() {
     entityType: "cycle" | "project";
     entityId: string;
     title: string;
+    subtitle?: string;
     totalAmount: number;
     currentStatus: PaymentStatus;
     currentPaidAmount: number;
@@ -36,6 +37,7 @@ export default function CyclesPage() {
     entityType: "cycle",
     entityId: "",
     title: "",
+    subtitle: undefined,
     totalAmount: 0,
     currentStatus: "unpaid",
     currentPaidAmount: 0,
@@ -275,7 +277,8 @@ export default function CyclesPage() {
                           isOpen: true,
                           entityType: "cycle",
                           entityId: cycle.id,
-                          title: `${cycle.client_business || cycle.client_name} (${formatDate(cycle.period_start)})`,
+                          title: cycle.client_business || cycle.client_name || "Monthly Retainer",
+                          subtitle: `${formatDate(cycle.period_start)} to ${formatDate(cycle.period_end)}`,
                           totalAmount: cycle.amount,
                           currentStatus: cycle.payment_status,
                           currentPaidAmount: cycle.paid_amount,
@@ -312,6 +315,7 @@ export default function CyclesPage() {
         entityType={paymentModalData.entityType}
         entityId={paymentModalData.entityId}
         title={paymentModalData.title}
+        subtitle={paymentModalData.subtitle}
         totalAmount={paymentModalData.totalAmount}
         currentStatus={paymentModalData.currentStatus}
         currentPaidAmount={paymentModalData.currentPaidAmount}

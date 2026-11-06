@@ -36,6 +36,7 @@ export default function DashboardPage() {
     entityType: "cycle" | "project";
     entityId: string;
     title: string;
+    subtitle?: string;
     totalAmount: number;
     currentStatus: any;
     currentPaidAmount: number;
@@ -44,6 +45,7 @@ export default function DashboardPage() {
     entityType: "cycle",
     entityId: "",
     title: "",
+    subtitle: undefined,
     totalAmount: 0,
     currentStatus: "unpaid",
     currentPaidAmount: 0,
@@ -87,13 +89,15 @@ export default function DashboardPage() {
     title: string,
     total: number,
     status: any,
-    paid: number
+    paid: number,
+    subtitle?: string
   ) => {
     setPaymentModalData({
       isOpen: true,
       entityType: type,
       entityId: id,
       title,
+      subtitle,
       totalAmount: total,
       currentStatus: status,
       currentPaidAmount: paid,
@@ -405,7 +409,8 @@ export default function DashboardPage() {
                           cycle.client_business || cycle.client_name || "Monthly Retainer",
                           cycle.amount,
                           cycle.payment_status,
-                          cycle.paid_amount
+                          cycle.paid_amount,
+                          `${formatDate(cycle.period_start)} to ${formatDate(cycle.period_end)}`
                         )
                       }
                       className="px-2.5 py-1.5 rounded-lg text-xs font-medium bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-white/10 transition-colors"
@@ -545,6 +550,7 @@ export default function DashboardPage() {
         entityType={paymentModalData.entityType}
         entityId={paymentModalData.entityId}
         title={paymentModalData.title}
+        subtitle={paymentModalData.subtitle}
         totalAmount={paymentModalData.totalAmount}
         currentStatus={paymentModalData.currentStatus}
         currentPaidAmount={paymentModalData.currentPaidAmount}
