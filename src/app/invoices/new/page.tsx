@@ -99,6 +99,18 @@ function NewInvoiceContent() {
   const clientProjects = projects.filter((p) => p.client_id === selectedClientId);
   const selectedProject = projects.find((p) => p.id === selectedProjectId);
 
+  // Sync project discount when a specific project is selected
+  useEffect(() => {
+    if (generationMode === "project" && selectedProject) {
+      if (selectedProject.discount !== undefined && selectedProject.discount !== null) {
+        setDiscount(selectedProject.discount);
+      }
+      if (selectedProject.discount_type) {
+        setDiscountType(selectedProject.discount_type);
+      }
+    }
+  }, [generationMode, selectedProjectId, selectedProject]);
+
   // Build items snapshot based on mode & selections
   let itemsToInclude: InvoiceItemSnapshot[] = [];
   let calculatedSubtotal = 0;

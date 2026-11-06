@@ -91,13 +91,13 @@ export async function PUT(
             q,
             u,
             q * u,
-            item.notes || null,
+            item.notes !== undefined && item.notes !== null ? String(item.notes) : null,
             now,
           ],
         });
       }
 
-      const dVal = parseFloat(discount !== undefined ? discount : 0) || 0;
+      const dVal = parseFloat(discount !== undefined && discount !== null ? discount : 0) || 0;
       const dType = discount_type || "fixed";
       const discountAmt =
         dType === "percentage"
@@ -123,18 +123,18 @@ export async function PUT(
         updated_at = ?
       WHERE id = ?`,
       args: [
-        title,
-        category,
-        description,
+        title !== undefined ? title : null,
+        category !== undefined ? category : null,
+        description !== undefined ? description : null,
         is_extra_project !== undefined ? (is_extra_project ? 1 : 0) : null,
-        status,
-        discount !== undefined ? parseFloat(discount) : null,
-        discount_type,
-        totalAmount,
-        paid_amount !== undefined ? parseFloat(paid_amount) : null,
-        payment_status,
-        due_date,
-        paid_at,
+        status !== undefined ? status : null,
+        discount !== undefined && discount !== null ? parseFloat(discount) : null,
+        discount_type !== undefined ? discount_type : null,
+        totalAmount !== undefined && totalAmount !== null ? totalAmount : null,
+        paid_amount !== undefined && paid_amount !== null ? parseFloat(paid_amount) : null,
+        payment_status !== undefined ? payment_status : null,
+        due_date !== undefined ? due_date : null,
+        paid_at !== undefined ? paid_at : null,
         now,
         id,
       ],

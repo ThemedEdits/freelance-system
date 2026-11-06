@@ -60,16 +60,16 @@ export const InvoiceDocument: React.FC<InvoiceDocumentProps> = ({
   return (
     <div
       id="invoice-document-root"
-      className="invoice-container bg-white text-zinc-900 border border-zinc-200 shadow-2xl rounded-none w-full max-w-[800px] min-h-[1050px] mx-auto p-10 sm:p-14 font-sans flex flex-col justify-between select-text"
+      className="invoice-container bg-white text-zinc-900 border border-zinc-200 shadow-2xl rounded-none w-full max-w-[800px] min-h-[1050px] mx-auto p-8 sm:p-12 font-sans flex flex-col justify-between select-text"
       style={{
         boxSizing: "border-box",
         pageBreakInside: "avoid",
       }}
     >
       {/* ================= REPEATING/TOP HEADER ================= */}
-      <div className="invoice-header w-full border-b-2 border-zinc-900 pb-6">
-        <div className="flex items-start justify-between gap-6">
-          <div className="flex items-center gap-3.5">
+      <div className="invoice-header w-full border-b-2 border-zinc-900 pb-5">
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex items-center gap-3">
             <div className="relative w-12 h-12 overflow-hidden bg-black rounded-lg p-1 shrink-0 flex items-center justify-center">
               <Image
                 src="/logo.png"
@@ -101,30 +101,30 @@ export const InvoiceDocument: React.FC<InvoiceDocumentProps> = ({
         </div>
 
         {/* Meta Bar */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6 pt-4 border-t border-zinc-200 text-xs">
+        <div className="grid grid-cols-4 gap-3 mt-5 pt-3.5 border-t border-zinc-200 text-xs">
           <div>
-            <span className="text-[10px] font-bold uppercase text-zinc-400 block tracking-wider">
+            <span className="text-[9px] font-bold uppercase text-zinc-400 block tracking-wider">
               Issue Date
             </span>
-            <span className="font-semibold text-zinc-900 mt-0.5 block">
+            <span className="font-semibold text-zinc-900 mt-0.5 block text-xs">
               {formatDate(issueDate)}
             </span>
           </div>
 
           <div>
-            <span className="text-[10px] font-bold uppercase text-zinc-400 block tracking-wider">
+            <span className="text-[9px] font-bold uppercase text-zinc-400 block tracking-wider">
               Due Date
             </span>
-            <span className="font-semibold text-zinc-900 mt-0.5 block">
+            <span className="font-semibold text-zinc-900 mt-0.5 block text-xs">
               {formatDate(dueDate)}
             </span>
           </div>
 
-          <div>
-            <span className="text-[10px] font-bold uppercase text-zinc-400 block tracking-wider">
+          <div className="min-w-0 pr-1">
+            <span className="text-[9px] font-bold uppercase text-zinc-400 block tracking-wider">
               Billed To
             </span>
-            <span className="font-bold text-zinc-900 mt-0.5 block truncate">
+            <span className="font-bold text-zinc-900 mt-0.5 block truncate text-xs">
               {client.business_name || client.name}
             </span>
             {client.business_name && client.name && (
@@ -134,8 +134,8 @@ export const InvoiceDocument: React.FC<InvoiceDocumentProps> = ({
             )}
           </div>
 
-          <div className="text-left sm:text-right">
-            <span className="text-[10px] font-bold uppercase text-zinc-400 block tracking-wider">
+          <div className="text-right">
+            <span className="text-[9px] font-bold uppercase text-zinc-400 block tracking-wider">
               Status
             </span>
             <span
@@ -148,9 +148,9 @@ export const InvoiceDocument: React.FC<InvoiceDocumentProps> = ({
               }`}
             >
               {balanceDue === 0
-                ? "Paid in Full"
+                ? "Paid"
                 : paidAmount > 0
-                ? "Partially Paid"
+                ? "Partial"
                 : "Payment Due"}
             </span>
           </div>
@@ -158,13 +158,13 @@ export const InvoiceDocument: React.FC<InvoiceDocumentProps> = ({
       </div>
 
       {/* ================= INVOICE BODY / LINE ITEMS ================= */}
-      <div className="invoice-body flex-1 py-6 w-full flex flex-col justify-between">
+      <div className="invoice-body flex-1 py-5 w-full flex flex-col justify-between">
         <div>
           {/* Project Title Banner */}
           {projectName && (
             <div className="mb-4 bg-zinc-50 border border-zinc-200 px-3.5 py-2 rounded">
-              <span className="text-[10px] font-bold uppercase text-zinc-400 block tracking-wider">
-                Project / Deliverable Scope
+              <span className="text-[9px] font-bold uppercase text-zinc-400 block tracking-wider">
+                Project Scope
               </span>
               <span className="text-xs font-bold text-zinc-900 mt-0.5 block">
                 {projectName}
@@ -176,17 +176,17 @@ export const InvoiceDocument: React.FC<InvoiceDocumentProps> = ({
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
-                  <tr className="border-b-2 border-zinc-900 bg-zinc-100 text-zinc-800 text-[10px] font-bold uppercase tracking-wider">
-                    <th className="py-2.5 px-3">Description / Item</th>
-                    <th className="py-2.5 px-2 text-center w-16">Qty</th>
-                    <th className="py-2.5 px-3 text-right w-24">Rate (PKR)</th>
-                    <th className="py-2.5 px-3 text-right w-28">Amount</th>
+                  <tr className="border-b-2 border-zinc-900 bg-zinc-100 text-zinc-800 text-[9px] font-bold uppercase tracking-wider">
+                    <th className="py-2 px-2.5">Deliverable / Description</th>
+                    <th className="py-2 px-2 text-center w-14">Qty</th>
+                    <th className="py-2 px-2.5 text-right w-24">Rate (PKR)</th>
+                    <th className="py-2 px-2.5 text-right w-24">Amount</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-zinc-200">
                   {items.map((item, idx) => (
                     <tr key={idx} className="hover:bg-zinc-50/50">
-                      <td className="py-3 px-3">
+                      <td className="py-2.5 px-2.5">
                         <span className="font-semibold text-zinc-900 block">
                           {item.name}
                         </span>
@@ -196,13 +196,13 @@ export const InvoiceDocument: React.FC<InvoiceDocumentProps> = ({
                           </span>
                         )}
                       </td>
-                      <td className="py-3 px-2 text-center font-medium text-zinc-700">
+                      <td className="py-2.5 px-2 text-center font-medium text-zinc-700">
                         {item.quantity}
                       </td>
-                      <td className="py-3 px-3 text-right text-zinc-700">
+                      <td className="py-2.5 px-2.5 text-right text-zinc-700">
                         {formatPKR(item.unitPrice)}
                       </td>
-                      <td className="py-3 px-3 text-right font-bold text-zinc-900">
+                      <td className="py-2.5 px-2.5 text-right font-bold text-zinc-900">
                         {formatPKR(item.total)}
                       </td>
                     </tr>
@@ -222,7 +222,7 @@ export const InvoiceDocument: React.FC<InvoiceDocumentProps> = ({
                   </p>
                 </div>
                 <div className="text-right">
-                  <span className="text-[10px] uppercase font-bold text-zinc-400 block tracking-wider">
+                  <span className="text-[9px] uppercase font-bold text-zinc-400 block tracking-wider">
                     Total Package
                   </span>
                   <span className="text-base font-black text-zinc-900">
@@ -235,43 +235,43 @@ export const InvoiceDocument: React.FC<InvoiceDocumentProps> = ({
         </div>
 
         {/* Financial Summary & Payment Accounts */}
-        <div className="mt-8 pt-4 border-t border-zinc-200 grid grid-cols-1 sm:grid-cols-12 gap-6 items-start">
+        <div className="mt-6 pt-4 border-t border-zinc-200 grid grid-cols-1 sm:grid-cols-12 gap-4 items-start">
           {/* Bank / EasyPaisa Information */}
-          <div className="sm:col-span-7 space-y-3">
+          <div className="sm:col-span-7 space-y-2.5">
             {includeBankInfo && (
-              <div className="space-y-2 text-xs">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-900 block border-b border-zinc-200 pb-1">
+              <div className="space-y-1.5 text-xs">
+                <span className="text-[9px] font-bold uppercase tracking-wider text-zinc-900 block border-b border-zinc-200 pb-0.5">
                   Remittance / Payment Accounts
                 </span>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px]">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[10px]">
                   {/* Bank Account */}
-                  <div className="p-2.5 rounded bg-zinc-50 border border-zinc-200">
+                  <div className="p-2 rounded bg-zinc-50 border border-zinc-200">
                     <span className="font-bold text-zinc-900 block flex items-center gap-1">
-                      <CreditCard size={12} />
+                      <CreditCard size={11} />
                       <span>{bankName}</span>
                     </span>
-                    <span className="text-zinc-600 block text-[10px] mt-1">
+                    <span className="text-zinc-600 block text-[9px] mt-0.5">
                       Title: <strong className="text-zinc-900">{accountTitle}</strong>
                     </span>
-                    <span className="text-zinc-600 block text-[10px]">
+                    <span className="text-zinc-600 block text-[9px]">
                       Account: <strong className="font-mono text-zinc-900">{accountNumber}</strong>
                     </span>
-                    <span className="text-zinc-600 block text-[10px] font-mono">
+                    <span className="text-zinc-600 block text-[9px] font-mono truncate">
                       IBAN: {iban}
                     </span>
                   </div>
 
                   {/* EasyPaisa Account */}
-                  <div className="p-2.5 rounded bg-zinc-50 border border-zinc-200">
+                  <div className="p-2 rounded bg-zinc-50 border border-zinc-200">
                     <span className="font-bold text-zinc-900 block flex items-center gap-1">
-                      <Smartphone size={12} />
+                      <Smartphone size={11} />
                       <span>EasyPaisa</span>
                     </span>
-                    <span className="text-zinc-600 block text-[10px] mt-1">
+                    <span className="text-zinc-600 block text-[9px] mt-0.5">
                       Title: <strong className="text-zinc-900">{epTitle}</strong>
                     </span>
-                    <span className="text-zinc-600 block text-[10px]">
+                    <span className="text-zinc-600 block text-[9px]">
                       Mobile #: <strong className="font-mono text-zinc-900">{epNumber}</strong>
                     </span>
                   </div>
@@ -280,11 +280,11 @@ export const InvoiceDocument: React.FC<InvoiceDocumentProps> = ({
             )}
 
             {notes && (
-              <div className="p-2.5 rounded bg-zinc-50 border border-zinc-200 text-xs">
-                <span className="text-[10px] font-bold uppercase text-zinc-400 block tracking-wider">
+              <div className="p-2 rounded bg-zinc-50 border border-zinc-200 text-xs">
+                <span className="text-[9px] font-bold uppercase text-zinc-400 block tracking-wider">
                   Payment Terms & Notes
                 </span>
-                <p className="text-zinc-700 text-[11px] mt-0.5 leading-relaxed">
+                <p className="text-zinc-700 text-[10px] mt-0.5 leading-relaxed">
                   {notes}
                 </p>
               </div>
@@ -292,7 +292,7 @@ export const InvoiceDocument: React.FC<InvoiceDocumentProps> = ({
           </div>
 
           {/* Grand Totals Box */}
-          <div className="sm:col-span-5 bg-zinc-50 border border-zinc-200 p-4 rounded text-xs space-y-2">
+          <div className="sm:col-span-5 bg-zinc-50 border border-zinc-200 p-3.5 rounded text-xs space-y-1.5">
             <div className="flex justify-between text-zinc-600">
               <span>Subtotal:</span>
               <span className="font-semibold text-zinc-900">{formatPKR(subtotal)}</span>
@@ -305,19 +305,19 @@ export const InvoiceDocument: React.FC<InvoiceDocumentProps> = ({
               </div>
             )}
 
-            <div className="flex justify-between text-sm font-black text-zinc-900 pt-2 border-t border-zinc-200">
+            <div className="flex justify-between text-sm font-black text-zinc-900 pt-1.5 border-t border-zinc-200">
               <span>Grand Total:</span>
               <span>{formatPKR(grandTotal)}</span>
             </div>
 
             {paidAmount > 0 && (
-              <div className="flex justify-between text-zinc-600 pt-1 text-[11px]">
+              <div className="flex justify-between text-zinc-600 pt-0.5 text-[10px]">
                 <span>Amount Paid:</span>
                 <span className="font-semibold text-zinc-900">{formatPKR(paidAmount)}</span>
               </div>
             )}
 
-            <div className="flex justify-between text-sm font-black p-2.5 rounded bg-zinc-900 text-white mt-2">
+            <div className="flex justify-between text-sm font-black p-2 rounded bg-zinc-900 text-white mt-1.5">
               <span>Balance Due:</span>
               <span>{formatPKR(balanceDue)}</span>
             </div>
@@ -326,24 +326,24 @@ export const InvoiceDocument: React.FC<InvoiceDocumentProps> = ({
       </div>
 
       {/* ================= STICKY FOOTER (REPEATS AT BOTTOM) ================= */}
-      <div className="invoice-footer w-full border-t-2 border-zinc-900 pt-4 mt-auto">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-zinc-600">
-          <div className="flex items-center gap-4 flex-wrap text-[11px]">
+      <div className="invoice-footer w-full border-t-2 border-zinc-900 pt-3.5 mt-auto">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-zinc-600">
+          <div className="flex items-center gap-3.5 flex-wrap text-[10px]">
             <span className="flex items-center gap-1 font-medium text-zinc-800">
-              <InstagramIcon size={12} className="text-zinc-900" />
+              <InstagramIcon size={11} className="text-zinc-900" />
               <span>themed.edits.te</span>
             </span>
             <span className="flex items-center gap-1 font-medium text-zinc-800">
-              <Mail size={12} className="text-zinc-900" />
+              <Mail size={11} className="text-zinc-900" />
               <span>themed.edits.co@gmail.com</span>
             </span>
             <span className="flex items-center gap-1 font-medium text-zinc-800">
-              <Phone size={12} className="text-zinc-900" />
+              <Phone size={11} className="text-zinc-900" />
               <span>03323954620</span>
             </span>
           </div>
 
-          <div className="text-[10px] font-semibold uppercase tracking-wider text-zinc-500">
+          <div className="text-[9px] font-semibold uppercase tracking-wider text-zinc-500">
             Themed Edits • Thank you for your business
           </div>
         </div>
