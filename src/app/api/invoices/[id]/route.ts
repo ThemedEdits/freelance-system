@@ -75,9 +75,9 @@ export async function PUT(
         updated_at = ?
       WHERE id = ?`,
       args: [
-        status,
-        paid_amount !== undefined ? parseFloat(paid_amount) : null,
-        notes,
+        status !== undefined ? status : null,
+        paid_amount !== undefined && paid_amount !== null && paid_amount !== "" ? parseFloat(paid_amount) : null,
+        notes !== undefined ? notes : null,
         now,
         id,
       ],
