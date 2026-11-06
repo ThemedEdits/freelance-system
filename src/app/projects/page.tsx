@@ -340,7 +340,7 @@ export default function ProjectsPage() {
 
                     {/* Generate Invoice */}
                     <Link
-                      href={`/invoices/new?project_id=${project.id}`}
+                      href={`/invoices/new?project_id=${project.id}&client_id=${project.client_id}`}
                       className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-white text-black hover:bg-zinc-200 text-xs font-semibold transition-colors shadow-sm"
                     >
                       <FilePlus size={13} />

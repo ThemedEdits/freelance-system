@@ -508,7 +508,7 @@ export default function DashboardPage() {
                         </button>
                         <span>•</span>
                         <Link
-                          href={`/invoices/new?project_id=${project.id}`}
+                          href={`/invoices/new?project_id=${project.id}&client_id=${project.client_id}`}
                           className="text-[11px] font-medium text-white hover:underline"
                         >
                           Invoice

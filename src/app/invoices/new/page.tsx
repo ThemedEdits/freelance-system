@@ -73,27 +73,51 @@ function NewInvoiceContent() {
           fetch("/api/settings"),
         ]);
 
+        let fetchedClients: Client[] = [];
+        let fetchedProjects: Project[] = [];
+
         if (cRes.ok) {
           const data = await cRes.json();
-          setClients(data.clients || []);
-          if (!selectedClientId && data.clients?.length > 0) {
-            setSelectedClientId(data.clients[0].id);
-          }
+          fetchedClients = data.clients || [];
+          setClients(fetchedClients);
         }
         if (pRes.ok) {
           const data = await pRes.json();
-          setProjects(data.projects || []);
+          fetchedProjects = data.projects || [];
+          setProjects(fetchedProjects);
         }
         if (sRes.ok) {
           const data = await sRes.json();
           setCompanySettings(data.settings);
+        }
+
+        // Determine correct client:
+        // 1. If preProjectId was passed, match the project's client_id!
+        if (preProjectId && fetchedProjects.length > 0) {
+          const matchedProj = fetchedProjects.find((p) => p.id === preProjectId);
+          if (matchedProj && matchedProj.client_id) {
+            setSelectedClientId(matchedProj.client_id);
+            setSelectedProjectId(matchedProj.id);
+            return;
+          }
+        }
+
+        // 2. If preClientId was passed
+        if (preClientId) {
+          setSelectedClientId(preClientId);
+          return;
+        }
+
+        // 3. Fallback only if no pre-selected client or project
+        if (!selectedClientId && fetchedClients.length > 0) {
+          setSelectedClientId(fetchedClients[0].id);
         }
       } catch (e) {
         console.error(e);
       }
     };
     fetchData();
-  }, []);
+  }, [preClientId, preProjectId]);
 
   const selectedClient = clients.find((c) => c.id === selectedClientId);
   const clientProjects = projects.filter((p) => p.client_id === selectedClientId);
