@@ -49,6 +49,7 @@ export async function PUT(
     const { id } = params;
     const body = await req.json();
     const {
+      client_id,
       title,
       category,
       description,
@@ -108,6 +109,7 @@ export async function PUT(
 
     await db.execute({
       sql: `UPDATE projects SET
+        client_id = COALESCE(?, client_id),
         title = COALESCE(?, title),
         category = COALESCE(?, category),
         description = COALESCE(?, description),
@@ -123,6 +125,7 @@ export async function PUT(
         updated_at = ?
       WHERE id = ?`,
       args: [
+        client_id !== undefined ? client_id : null,
         title !== undefined ? title : null,
         category !== undefined ? category : null,
         description !== undefined ? description : null,

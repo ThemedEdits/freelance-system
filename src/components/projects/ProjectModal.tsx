@@ -104,9 +104,12 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
         const res = await fetch("/api/clients");
         if (res.ok) {
           const data = await res.json();
-          setClients(data.clients || []);
-          if (!clientId && data.clients?.length > 0) {
-            setClientId(defaultClientId || data.clients[0].id);
+          const clientList = data.clients || [];
+          setClients(clientList);
+
+          // Only default to first client if creating a new project and no client is set
+          if (!projectToEdit && !defaultClientId && !clientId && clientList.length > 0) {
+            setClientId(clientList[0].id);
           }
         }
       } catch (e) {
@@ -116,7 +119,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
     if (isOpen) {
       fetchClients();
     }
-  }, [isOpen, clientId, defaultClientId]);
+  }, [isOpen, projectToEdit, defaultClientId]);
 
   // When client changes, auto-detect if client has monthly billing to suggest "Extra Project"
   const selectedClient = clients.find((c) => c.id === clientId);
