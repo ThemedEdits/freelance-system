@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { MobileNav } from "@/components/layout/MobileNav";
+import { ToastProvider } from "@/components/ui/Toast";
 
 export const metadata: Metadata = {
   title: "Themed Edits • Client Management & Invoicing System",
@@ -23,21 +24,23 @@ export default function RootLayout({
         <link rel="icon" href="/logo.png" />
       </head>
       <body className="min-h-screen bg-black text-zinc-100 flex flex-col antialiased selection:bg-white selection:text-black">
-        <div className="flex min-h-screen w-full bg-black">
-          {/* Desktop Sidebar */}
-          <Sidebar />
+        <ToastProvider>
+          <div className="flex min-h-screen w-full bg-black">
+            {/* Desktop Sidebar */}
+            <Sidebar />
 
-          {/* Main Content Area */}
-          <div className="flex-1 flex flex-col min-w-0 bg-black">
-            {/* Mobile Navigation Header & Slide Drawer */}
-            <MobileNav />
+            {/* Main Content Area */}
+            <div className="flex-1 flex flex-col min-w-0 bg-black">
+              {/* Mobile Navigation Header & Slide Drawer */}
+              <MobileNav />
 
-            {/* Page Viewport */}
-            <main className="flex-1 w-full max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
-              {children}
-            </main>
+              {/* Page Viewport */}
+              <main className="flex-1 w-full max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+                {children}
+              </main>
+            </div>
           </div>
-        </div>
+        </ToastProvider>
       </body>
     </html>
   );

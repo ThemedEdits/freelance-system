@@ -8,7 +8,8 @@ import { CustomSelect } from "@/components/ui/CustomSelect";
 import { CustomToggle } from "@/components/ui/CustomToggle";
 import { CustomDatePicker } from "@/components/ui/CustomDatePicker";
 import { PostCalculator, CalculatorItem } from "@/components/projects/PostCalculator";
-import { Briefcase, Palette, Globe, Code2, Layers } from "lucide-react";
+import { useToast } from "@/components/ui/Toast";
+import { Briefcase, Palette, Globe, Code2 } from "lucide-react";
 import { Client, Project, ServiceCategory, PaymentStatus } from "@/lib/types";
 
 interface ProjectModalProps {
@@ -26,48 +27,76 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
   projectToEdit,
   defaultClientId,
 }) => {
+  const { showToast } = useToast();
   const [clients, setClients] = useState<Client[]>([]);
-  const [clientId, setClientId] = useState(
-    projectToEdit?.client_id || defaultClientId || ""
-  );
-  const [title, setTitle] = useState(projectToEdit?.title || "");
-  const [category, setCategory] = useState<ServiceCategory>(
-    projectToEdit?.category || "graphic_design"
-  );
-  const [description, setDescription] = useState(
-    projectToEdit?.description || ""
-  );
-  const [isExtraProject, setIsExtraProject] = useState(
-    projectToEdit?.is_extra_project === 1
-  );
+  const [clientId, setClientId] = useState(defaultClientId || "");
+  const [title, setTitle] = useState("");
+  const [category, setCategory] = useState<ServiceCategory>("graphic_design");
+  const [description, setDescription] = useState("");
+  const [isExtraProject, setIsExtraProject] = useState(false);
   const [dueDate, setDueDate] = useState(
-    projectToEdit?.due_date ||
-      new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split("T")[0]
+    new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split("T")[0]
   );
-  const [discount, setDiscount] = useState<number>(projectToEdit?.discount || 0);
-  const [discountType, setDiscountType] = useState<"fixed" | "percentage">(
-    projectToEdit?.discount_type || "fixed"
-  );
-  const [items, setItems] = useState<CalculatorItem[]>(
-    projectToEdit?.items && projectToEdit.items.length > 0
-      ? projectToEdit.items.map((i) => ({
-          id: i.id,
-          item_type: i.item_type,
-          quantity: i.quantity,
-          unit_price: i.unit_price,
-          total_price: i.total_price,
-          notes: i.notes || "",
-        }))
-      : []
-  );
-  const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>(
-    projectToEdit?.payment_status || "unpaid"
-  );
-  const [paidAmount, setPaidAmount] = useState<number>(
-    projectToEdit?.paid_amount || 0
-  );
+  const [discount, setDiscount] = useState<number>(0);
+  const [discountType, setDiscountType] = useState<"fixed" | "percentage">("fixed");
+  const [items, setItems] = useState<CalculatorItem[]>([]);
+  const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>("unpaid");
+  const [paidAmount, setPaidAmount] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+
+  // Sync state whenever modal opens or projectToEdit changes
+  useEffect(() => {
+    if (!isOpen) return;
+
+    if (projectToEdit) {
+      setClientId(projectToEdit.client_id || "");
+      setTitle(projectToEdit.title || "");
+      setCategory(projectToEdit.category || "graphic_design");
+      setDescription(projectToEdit.description || "");
+      setIsExtraProject(projectToEdit.is_extra_project === 1);
+      setDueDate(
+        projectToEdit.due_date ||
+          new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split("T")[0]
+      );
+      setDiscount(projectToEdit.discount || 0);
+      setDiscountType(projectToEdit.discount_type || "fixed");
+      setPaymentStatus(projectToEdit.payment_status || "unpaid");
+      setPaidAmount(projectToEdit.paid_amount || 0);
+
+      // Populate deliverables items if present
+      if (projectToEdit.items && projectToEdit.items.length > 0) {
+        setItems(
+          projectToEdit.items.map((i) => ({
+            id: i.id,
+            item_type: i.item_type,
+            quantity: i.quantity,
+            unit_price: i.unit_price,
+            total_price: i.total_price,
+            notes: i.notes || "",
+          }))
+        );
+      } else {
+        setItems([]);
+      }
+    } else {
+      // New project defaults
+      setClientId(defaultClientId || "");
+      setTitle("");
+      setCategory("graphic_design");
+      setDescription("");
+      setIsExtraProject(false);
+      setDueDate(
+        new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split("T")[0]
+      );
+      setDiscount(0);
+      setDiscountType("fixed");
+      setItems([]);
+      setPaymentStatus("unpaid");
+      setPaidAmount(0);
+    }
+    setError("");
+  }, [isOpen, projectToEdit, defaultClientId]);
 
   useEffect(() => {
     const fetchClients = async () => {
@@ -144,10 +173,21 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
         throw new Error(data.error || "Failed to save project");
       }
 
+      showToast({
+        type: "success",
+        title: projectToEdit ? "Project Updated" : "Project Created",
+        message: `${title} saved with ${items.length} deliverable(s).`,
+      });
+
       onSaved();
       onClose();
     } catch (err: any) {
       setError(err.message || "Failed to save project");
+      showToast({
+        type: "error",
+        title: "Error Saving Project",
+        message: err.message || "Could not save project.",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -224,7 +264,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
           />
         </div>
 
-        {/* Extra Project Toggle (crucial requirement from prompt) */}
+        {/* Extra Project Toggle */}
         {selectedClient &&
           (selectedClient.billing_type === "monthly" ||
             selectedClient.billing_type === "hybrid") && (

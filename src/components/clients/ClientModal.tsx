@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ActionPopup } from "@/components/ui/ActionPopup";
 import { FloatingInput } from "@/components/ui/FloatingInput";
 import { FloatingTextarea } from "@/components/ui/FloatingTextarea";
 import { CustomSelect } from "@/components/ui/CustomSelect";
 import { CustomNumberStepper } from "@/components/ui/CustomNumberStepper";
+import { useToast } from "@/components/ui/Toast";
 import { UserPlus, Palette, Globe, Code2, Calendar } from "lucide-react";
 import { Client, ServiceCategory, BillingType } from "@/lib/types";
 
@@ -22,27 +23,44 @@ export const ClientModal: React.FC<ClientModalProps> = ({
   onSaved,
   clientToEdit,
 }) => {
-  const [name, setName] = useState(clientToEdit?.name || "");
-  const [businessName, setBusinessName] = useState(
-    clientToEdit?.business_name || ""
-  );
-  const [email, setEmail] = useState(clientToEdit?.email || "");
-  const [phone, setPhone] = useState(clientToEdit?.phone || "");
-  const [category, setCategory] = useState<ServiceCategory>(
-    clientToEdit?.category || "graphic_design"
-  );
-  const [billingType, setBillingType] = useState<BillingType>(
-    clientToEdit?.billing_type || "monthly"
-  );
-  const [monthlyAmount, setMonthlyAmount] = useState<number>(
-    clientToEdit?.monthly_amount || 35000
-  );
-  const [cycleResetDay, setCycleResetDay] = useState<number>(
-    clientToEdit?.cycle_reset_day || 1
-  );
-  const [notes, setNotes] = useState(clientToEdit?.notes || "");
+  const { showToast } = useToast();
+  const [name, setName] = useState("");
+  const [businessName, setBusinessName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [category, setCategory] = useState<ServiceCategory>("graphic_design");
+  const [billingType, setBillingType] = useState<BillingType>("monthly");
+  const [monthlyAmount, setMonthlyAmount] = useState<number>(35000);
+  const [cycleResetDay, setCycleResetDay] = useState<number>(1);
+  const [notes, setNotes] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (!isOpen) return;
+    if (clientToEdit) {
+      setName(clientToEdit.name || "");
+      setBusinessName(clientToEdit.business_name || "");
+      setEmail(clientToEdit.email || "");
+      setPhone(clientToEdit.phone || "");
+      setCategory(clientToEdit.category || "graphic_design");
+      setBillingType(clientToEdit.billing_type || "monthly");
+      setMonthlyAmount(clientToEdit.monthly_amount || 35000);
+      setCycleResetDay(clientToEdit.cycle_reset_day || 1);
+      setNotes(clientToEdit.notes || "");
+    } else {
+      setName("");
+      setBusinessName("");
+      setEmail("");
+      setPhone("");
+      setCategory("graphic_design");
+      setBillingType("monthly");
+      setMonthlyAmount(35000);
+      setCycleResetDay(1);
+      setNotes("");
+    }
+    setError("");
+  }, [isOpen, clientToEdit]);
 
   const handleSubmit = async () => {
     if (!name.trim()) {
@@ -78,10 +96,21 @@ export const ClientModal: React.FC<ClientModalProps> = ({
         throw new Error(data.error || "Failed to save client");
       }
 
+      showToast({
+        type: "success",
+        title: clientToEdit ? "Client Updated" : "Client Created",
+        message: `${businessName || name} has been saved successfully.`,
+      });
+
       onSaved();
       onClose();
     } catch (err: any) {
       setError(err.message || "Failed to save client");
+      showToast({
+        type: "error",
+        title: "Error Saving Client",
+        message: err.message || "Could not save client record.",
+      });
     } finally {
       setIsLoading(false);
     }

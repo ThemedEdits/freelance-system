@@ -179,15 +179,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
       </div>
 
-      {/* Footer Info */}
-      <div className="p-4 border-t border-white/10 bg-black">
-        <div className="flex items-center justify-between text-xs text-zinc-400">
-          <span className="text-[11px] text-zinc-400">Design • Web • Code</span>
-          <span className="px-1.5 py-0.5 text-[10px] font-semibold rounded bg-zinc-900 text-zinc-300 border border-white/10">
-            PKR
-          </span>
-        </div>
-      </div>
+
     </aside>
   );
 };

@@ -5,6 +5,7 @@ import { ActionPopup } from "@/components/ui/ActionPopup";
 import { FloatingInput } from "@/components/ui/FloatingInput";
 import { CustomSelect } from "@/components/ui/CustomSelect";
 import { CustomDatePicker } from "@/components/ui/CustomDatePicker";
+import { useToast } from "@/components/ui/Toast";
 import { formatPKR } from "@/lib/utils";
 import { CreditCard, CheckCircle2, Clock, AlertCircle, PieChart } from "lucide-react";
 import { PaymentStatus } from "@/lib/types";
@@ -34,6 +35,7 @@ export const PaymentStatusModal: React.FC<PaymentStatusModalProps> = ({
   currentPaidAmount,
   dueDate,
 }) => {
+  const { showToast } = useToast();
   const [status, setStatus] = useState<PaymentStatus>(currentStatus);
   const [paidAmount, setPaidAmount] = useState<number>(
     currentStatus === "paid" ? totalAmount : currentPaidAmount || 0
@@ -83,10 +85,21 @@ export const PaymentStatusModal: React.FC<PaymentStatusModalProps> = ({
         throw new Error(data.error || "Failed to update payment status");
       }
 
+      showToast({
+        type: "success",
+        title: "Payment Status Updated",
+        message: `${title} status updated to ${status}.`,
+      });
+
       onSuccess();
       onClose();
     } catch (err: any) {
       setError(err.message || "Failed to update payment status");
+      showToast({
+        type: "error",
+        title: "Update Failed",
+        message: err.message || "Could not update payment status.",
+      });
     } finally {
       setIsLoading(false);
     }

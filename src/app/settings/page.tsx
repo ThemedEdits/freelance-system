@@ -3,23 +3,22 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import {
-  Settings,
-  Building2,
   CreditCard,
   Smartphone,
   Save,
   Check,
   Mail,
   Phone,
-  Globe,
 } from "lucide-react";
 import { InstagramIcon } from "@/components/ui/InstagramIcon";
 import { Header } from "@/components/layout/Header";
 import { FloatingInput } from "@/components/ui/FloatingInput";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
+import { useToast } from "@/components/ui/Toast";
 import { CompanySettings } from "@/lib/types";
 
 export default function SettingsPage() {
+  const { showToast } = useToast();
   const [settings, setSettings] = useState<CompanySettings | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -58,10 +57,20 @@ export default function SettingsPage() {
 
       if (res.ok) {
         setSuccessMessage("Company settings & bank details saved successfully!");
+        showToast({
+          type: "success",
+          title: "Settings Saved",
+          message: "All company details and payment accounts updated.",
+        });
         setTimeout(() => setSuccessMessage(""), 3500);
       }
     } catch (e) {
       console.error(e);
+      showToast({
+        type: "error",
+        title: "Save Failed",
+        message: "Failed to update company settings.",
+      });
     } finally {
       setIsSaving(false);
     }
@@ -83,7 +92,7 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="space-y-6 animate-fadeIn pb-16">
+    <div className="space-y-6 pb-16">
       <Header
         title="Settings & Firm Identity"
         subtitle="Manage company socials, bank accounts, EasyPaisa details, and invoice footer metadata"
@@ -91,36 +100,36 @@ export default function SettingsPage() {
 
       <form onSubmit={handleSave} className="space-y-6 max-w-4xl">
         {successMessage && (
-          <div className="p-4 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-sm flex items-center gap-2">
-            <Check size={16} />
+          <div className="p-3.5 rounded-xl bg-zinc-900 border border-white/20 text-white text-xs flex items-center gap-2">
+            <Check size={14} />
             <span>{successMessage}</span>
           </div>
         )}
 
         {/* Company Identity */}
-        <div className="p-6 rounded-2xl glass-card border border-white/[0.08] space-y-5">
-          <div className="flex items-center gap-4 pb-4 border-b border-white/[0.08]">
-            <div className="relative w-16 h-16 rounded-2xl overflow-hidden bg-slate-900 border border-white/[0.1] p-1.5 shrink-0 flex items-center justify-center shadow-[0_0_20px_rgba(0,229,255,0.15)]">
+        <div className="p-5 sm:p-6 rounded-xl bg-zinc-950 border border-white/10 space-y-4">
+          <div className="flex items-center gap-3.5 pb-4 border-b border-white/10">
+            <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-black border border-white/15 p-1 shrink-0 flex items-center justify-center">
               <Image
                 src="/logo.png"
                 alt="Themed Edits"
-                width={64}
-                height={64}
+                width={48}
+                height={48}
                 className="object-contain"
                 priority
               />
             </div>
             <div>
-              <h2 className="text-base font-bold text-white">
+              <h2 className="text-sm sm:text-base font-bold text-white">
                 Company Brand & Social Handles
               </h2>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-zinc-400">
                 These details appear on fixed invoice headers, footers, and client notifications.
               </p>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <FloatingInput
               label="Company / Firm Name"
               value={settings.company_name}
@@ -134,7 +143,7 @@ export default function SettingsPage() {
             />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
             <FloatingInput
               label="Official Email"
               type="email"
@@ -160,24 +169,24 @@ export default function SettingsPage() {
         </div>
 
         {/* Bank & EasyPaisa Accounts */}
-        <div className="p-6 rounded-2xl glass-card border border-white/[0.08] space-y-5">
-          <div className="pb-3 border-b border-white/[0.08]">
-            <h2 className="text-base font-bold text-white flex items-center gap-2">
-              <CreditCard size={18} className="text-cyan-400" />
+        <div className="p-5 sm:p-6 rounded-xl bg-zinc-950 border border-white/10 space-y-4">
+          <div className="pb-3 border-b border-white/10">
+            <h2 className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
+              <CreditCard size={16} className="text-zinc-400" />
               <span>Bank & EasyPaisa Accounts (For Invoices)</span>
             </h2>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <p className="text-xs text-zinc-400 mt-0.5">
               Clients won&apos;t have to ask repeatedly; these appear neatly organized on every generated invoice.
             </p>
           </div>
 
           {/* Bank Transfer Details */}
-          <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.06] space-y-4">
-            <span className="text-xs font-bold uppercase tracking-wider text-cyan-400 block">
+          <div className="p-3.5 rounded-xl bg-black border border-white/5 space-y-3">
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-zinc-300 block">
               Primary Bank Transfer Account
             </span>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <FloatingInput
                 label="Bank Name"
                 value={settings.bank_name}
@@ -191,7 +200,7 @@ export default function SettingsPage() {
               />
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <FloatingInput
                 label="Account Number"
                 value={settings.account_number}
@@ -207,13 +216,13 @@ export default function SettingsPage() {
           </div>
 
           {/* EasyPaisa Details */}
-          <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.06] space-y-4">
-            <span className="text-xs font-bold uppercase tracking-wider text-emerald-400 block flex items-center gap-1.5">
-              <Smartphone size={15} />
+          <div className="p-3.5 rounded-xl bg-black border border-white/5 space-y-3">
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-zinc-300 block flex items-center gap-1.5">
+              <Smartphone size={14} className="text-zinc-400" />
               <span>Easypaisa Mobile Wallet Account</span>
             </span>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <FloatingInput
                 label="Easypaisa Account Title"
                 value={settings.easypaisa_title}
@@ -230,9 +239,9 @@ export default function SettingsPage() {
         </div>
 
         {/* Currency & Preferences */}
-        <div className="p-6 rounded-2xl glass-card border border-white/[0.08] space-y-4">
-          <h2 className="text-base font-bold text-white">Currency Preferences</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="p-5 sm:p-6 rounded-xl bg-zinc-950 border border-white/10 space-y-3">
+          <h2 className="text-sm sm:text-base font-bold text-white">Currency Preferences</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <FloatingInput
               label="Currency Code"
               value={settings.currency}
@@ -250,9 +259,9 @@ export default function SettingsPage() {
           <button
             type="submit"
             disabled={isSaving}
-            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-bold bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 shadow-lg shadow-cyan-950/40 transition-all active:scale-95 disabled:opacity-50"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-semibold bg-white text-black hover:bg-zinc-200 transition-colors shadow-sm disabled:opacity-50"
           >
-            <Save size={16} />
+            <Save size={14} />
             <span>{isSaving ? "Saving Settings..." : "Save All Settings"}</span>
           </button>
         </div>

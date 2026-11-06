@@ -48,18 +48,18 @@ export const CustomToggle: React.FC<CustomToggleProps> = ({
         </div>
       )}
 
-      {/* Robust CSS-only sliding track & knob */}
+      {/* Perfectly centered slider & sticky smooth knob */}
       <div
-        className={`relative inline-flex h-6 w-11 shrink-0 rounded-full border transition-colors duration-200 ease-in-out ${
+        className={`relative inline-flex items-center h-6 w-11 shrink-0 rounded-full border transition-colors duration-200 ease-in-out px-[2px] ${
           checked
             ? "bg-white border-white"
             : "bg-zinc-800 border-zinc-700"
         }`}
       >
         <span
-          className={`pointer-events-none inline-block h-5 w-5 rounded-full shadow-md transition-transform duration-200 ease-in-out mt-[1px] ml-[1px] ${
+          className={`pointer-events-none inline-block h-[18px] w-[18px] rounded-full shadow-sm transition-transform duration-200 ease-in-out ${
             checked
-              ? "translate-x-5 bg-black"
+              ? "translate-x-[20px] bg-black"
               : "translate-x-0 bg-zinc-300"
           }`}
         />

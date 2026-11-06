@@ -16,11 +16,13 @@ import { CustomSelect } from "@/components/ui/CustomSelect";
 import { CustomToggle } from "@/components/ui/CustomToggle";
 import { CustomDatePicker } from "@/components/ui/CustomDatePicker";
 import { InvoiceDocument } from "@/components/invoices/InvoiceDocument";
+import { useToast } from "@/components/ui/Toast";
 import { Client, Project, InvoiceItemSnapshot, CompanySettings } from "@/lib/types";
 import { formatPKR, formatDate } from "@/lib/utils";
 
 function NewInvoiceContent() {
   const router = useRouter();
+  const { showToast } = useToast();
   const searchParams = useSearchParams();
   const preClientId = searchParams.get("client_id") || "";
   const preProjectId = searchParams.get("project_id") || "";
@@ -193,9 +195,18 @@ function NewInvoiceContent() {
       }
 
       const data = await res.json();
+      showToast({
+        type: "success",
+        title: "Invoice Generated",
+        message: `Invoice #${data.invoice.invoice_number} created successfully.`,
+      });
       router.push(`/invoices/${data.invoice.id}`);
     } catch (e: any) {
-      alert(e.message || "Error saving invoice");
+      showToast({
+        type: "error",
+        title: "Invoice Generation Failed",
+        message: e.message || "Error saving invoice.",
+      });
     } finally {
       setIsSaving(false);
     }

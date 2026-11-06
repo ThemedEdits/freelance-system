@@ -86,11 +86,24 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Generate unique sequential invoice number
+    // Fetch client to extract short prefix/code
+    const clientRes = await db.execute({
+      sql: `SELECT name, business_name FROM clients WHERE id = ?`,
+      args: [client_id],
+    });
+
+    let clientPrefix = "CLI";
+    if (clientRes.rows.length > 0) {
+      const rawName = (clientRes.rows[0].business_name || clientRes.rows[0].name || "") as string;
+      const cleaned = rawName.replace(/[^a-zA-Z0-9]/g, "").toUpperCase();
+      clientPrefix = cleaned.slice(0, 4) || "CLI";
+    }
+
+    // Generate unique sequential invoice number with client prefix
     const countRes = await db.execute("SELECT COUNT(*) as count FROM invoices");
     const nextSeq = ((countRes.rows[0].count as number) || 0) + 1;
-    const year = new Date().getFullYear();
-    const invoiceNumber = `TE-INV-${year}-${String(nextSeq).padStart(3, "0")}`;
+    const randomHex = crypto.randomBytes(2).toString("hex").toUpperCase();
+    const invoiceNumber = `INV-${clientPrefix}-${String(nextSeq).padStart(3, "0")}-${randomHex}`;
 
     const invoiceId = crypto.randomUUID();
     const now = new Date().toISOString();

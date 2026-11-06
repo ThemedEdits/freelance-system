@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   Printer,
+  Download,
   ChevronLeft,
   CheckCircle2,
   Share2,
@@ -13,17 +14,20 @@ import {
 import { InvoiceDocument } from "@/components/invoices/InvoiceDocument";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { ActionPopup } from "@/components/ui/ActionPopup";
+import { useToast } from "@/components/ui/Toast";
 import { Invoice, CompanySettings } from "@/lib/types";
 
 export default function InvoiceDetailPage() {
   const params = useParams();
   const router = useRouter();
   const id = params?.id as string;
+  const { showToast } = useToast();
 
   const [invoice, setInvoice] = useState<Invoice | null>(null);
   const [settings, setSettings] = useState<CompanySettings | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isCopied, setIsCopied] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const fetchInvoice = async () => {
@@ -57,6 +61,11 @@ export default function InvoiceDetailPage() {
           paid_amount: invoice.grand_total,
         }),
       });
+      showToast({
+        type: "success",
+        title: "Marked as Paid",
+        message: `Invoice #${invoice.invoice_number} marked paid in full.`,
+      });
       fetchInvoice();
     } catch (e) {
       console.error(e);
@@ -66,6 +75,11 @@ export default function InvoiceDetailPage() {
   const handleDelete = async () => {
     try {
       await fetch(`/api/invoices/${id}`, { method: "DELETE" });
+      showToast({
+        type: "info",
+        title: "Invoice Deleted",
+        message: "Invoice was removed successfully.",
+      });
       router.push("/invoices");
     } catch (e) {
       console.error(e);
@@ -75,7 +89,49 @@ export default function InvoiceDetailPage() {
   const handleCopyLink = () => {
     navigator.clipboard.writeText(window.location.href);
     setIsCopied(true);
+    showToast({
+      type: "success",
+      title: "Link Copied",
+      message: "Direct link to invoice copied to clipboard.",
+    });
     setTimeout(() => setIsCopied(false), 2500);
+  };
+
+  const handleDownloadPdf = async () => {
+    if (typeof window === "undefined" || !invoice) return;
+    const element = document.getElementById("invoice-document-root");
+    if (!element) {
+      window.print();
+      return;
+    }
+
+    setIsDownloading(true);
+    try {
+      // @ts-ignore
+      const html2pdfModule = await import("html2pdf.js");
+      const html2pdf = html2pdfModule.default || html2pdfModule;
+
+      const opt = {
+        margin: [8, 8, 8, 8] as [number, number, number, number],
+        filename: `${invoice.invoice_number}.pdf`,
+        image: { type: "jpeg" as const, quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, letterRendering: true },
+        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" as const },
+      };
+
+      await html2pdf().from(element).set(opt).save();
+
+      showToast({
+        type: "success",
+        title: "PDF Downloaded",
+        message: `${invoice.invoice_number}.pdf has been saved.`,
+      });
+    } catch (err) {
+      console.error("html2pdf error, fallback to print:", err);
+      window.print();
+    } finally {
+      setIsDownloading(false);
+    }
   };
 
   if (isLoading || !invoice) {
@@ -130,13 +186,24 @@ export default function InvoiceDetailPage() {
             <span>{isCopied ? "Link Copied!" : "Share Link"}</span>
           </button>
 
+          {/* Direct Download PDF Button */}
+          <button
+            type="button"
+            disabled={isDownloading}
+            onClick={handleDownloadPdf}
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-white text-black hover:bg-zinc-200 transition-colors shadow-sm disabled:opacity-50"
+          >
+            <Download size={13} />
+            <span>{isDownloading ? "Generating PDF..." : "Download PDF"}</span>
+          </button>
+
           <button
             type="button"
             onClick={() => window.print()}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-white text-black hover:bg-zinc-200 transition-colors shadow-sm"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-white/10 transition-colors"
           >
             <Printer size={13} />
-            <span>Print / Save PDF</span>
+            <span>Print</span>
           </button>
 
           <button
@@ -151,7 +218,7 @@ export default function InvoiceDetailPage() {
       </div>
 
       {/* Invoice Document Layout */}
-      <div>
+      <div className="py-2 overflow-x-auto">
         <InvoiceDocument
           invoiceNumber={invoice.invoice_number}
           issueDate={invoice.issue_date}
