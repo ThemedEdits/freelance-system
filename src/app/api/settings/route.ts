@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   try {
     const res = await db.execute(
@@ -114,4 +116,9 @@ export async function PUT(req: NextRequest) {
       { status: 500 }
     );
   }
+}
+
+// Allow POST as well as an alias to PUT to avoid any HTTP 405 Method Not Allowed issues
+export async function POST(req: NextRequest) {
+  return PUT(req);
 }
