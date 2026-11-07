@@ -61,7 +61,7 @@ function NewInvoiceContent() {
 
   const [companySettings, setCompanySettings] = useState<CompanySettings | null>(null);
   const [isSaving, setIsSaving] = useState(false);
-  const [activeTab, setActiveTab] = useState<"editor" | "preview">("editor");
+  const [activeTab, setActiveTab] = useState<"editor" | "preview" | "split">("preview");
 
   // Fetch initial clients, projects, settings
   useEffect(() => {
@@ -269,15 +269,15 @@ function NewInvoiceContent() {
         </div>
 
         <div className="flex items-center gap-2 flex-wrap">
-          {/* Mobile view toggle */}
-          <div className="flex xl:hidden rounded-lg bg-zinc-900 border border-white/10 p-1">
+          {/* Universal view toggle (for desktop and mobile) */}
+          <div className="flex rounded-lg bg-zinc-900 border border-white/10 p-1">
             <button
               type="button"
               onClick={() => setActiveTab("editor")}
-              className={`px-3 py-1.5 rounded-md text-xs font-medium ${
+              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
                 activeTab === "editor"
-                  ? "bg-white text-black font-semibold"
-                  : "text-zinc-400"
+                  ? "bg-white text-black font-semibold shadow-sm"
+                  : "text-zinc-400 hover:text-white"
               }`}
             >
               Configure
@@ -285,13 +285,24 @@ function NewInvoiceContent() {
             <button
               type="button"
               onClick={() => setActiveTab("preview")}
-              className={`px-3 py-1.5 rounded-md text-xs font-medium ${
+              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
                 activeTab === "preview"
-                  ? "bg-white text-black font-semibold"
-                  : "text-zinc-400"
+                  ? "bg-white text-black font-semibold shadow-sm"
+                  : "text-zinc-400 hover:text-white"
               }`}
             >
-              Live Preview
+              Full A4 Preview
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab("split")}
+              className={`hidden xl:inline-block px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+                activeTab === "split"
+                  ? "bg-white text-black font-semibold shadow-sm"
+                  : "text-zinc-400 hover:text-white"
+              }`}
+            >
+              Side-by-Side
             </button>
           </div>
 
@@ -317,11 +328,23 @@ function NewInvoiceContent() {
       </div>
 
       {/* Main Grid: Controls vs Live Document */}
-      <div className="grid grid-cols-1 xl:grid-cols-12 gap-5 sm:gap-6 items-start">
+      <div
+        className={
+          activeTab === "preview"
+            ? "flex flex-col items-center justify-center py-2"
+            : activeTab === "editor"
+            ? "max-w-3xl mx-auto"
+            : "grid grid-cols-1 xl:grid-cols-12 gap-5 sm:gap-6 items-start"
+        }
+      >
         {/* Left Column: Customization Controls */}
         <div
-          className={`xl:col-span-5 space-y-4 ${
-            activeTab === "preview" ? "hidden xl:block" : "block"
+          className={`space-y-4 ${
+            activeTab === "preview"
+              ? "hidden"
+              : activeTab === "editor"
+              ? "w-full"
+              : "xl:col-span-5"
           }`}
         >
           {/* Client & Scope Selection */}
@@ -502,17 +525,23 @@ function NewInvoiceContent() {
           </div>
         </div>
 
-        {/* Right Column: High Fidelity Live Invoice Preview */}
+        {/* Right Column / Full Preview: High Fidelity Live Invoice Preview */}
         <div
-          className={`xl:col-span-7 ${
-            activeTab === "editor" ? "hidden xl:block" : "block"
+          className={`${
+            activeTab === "editor"
+              ? "hidden"
+              : activeTab === "preview"
+              ? "w-full max-w-[820px]"
+              : "xl:col-span-7"
           }`}
         >
           <div className="sticky top-20">
             <div className="flex items-center justify-between pb-3 px-1 text-xs text-zinc-400">
               <span className="flex items-center gap-1.5">
                 <Eye size={14} className="text-zinc-400" />
-                <span>Live Invoice Document Preview</span>
+                <span>
+                  {activeTab === "preview" ? "Full Standard A4 Invoice Preview" : "Live Invoice Document Preview"}
+                </span>
               </span>
               <span className="font-mono text-zinc-300 font-medium">
                 {itemsToInclude.length} deliverable item(s) included
@@ -520,33 +549,35 @@ function NewInvoiceContent() {
             </div>
 
             {selectedClient ? (
-              <InvoiceDocument
-                invoiceNumber="TE-INV-PREVIEW"
-                issueDate={issueDate}
-                dueDate={dueDate}
-                client={{
-                  name: selectedClient.name,
-                  business_name: selectedClient.business_name,
-                  email: selectedClient.email,
-                  phone: selectedClient.phone,
-                  category: selectedClient.category,
-                }}
-                projectName={
-                  generationMode === "project" && selectedProject
-                    ? selectedProject.title
-                    : `${selectedClient.business_name || selectedClient.name} • Deliverables Package`
-                }
-                items={itemsToInclude}
-                showBreakdown={showBreakdown}
-                includeBankInfo={includeBankInfo}
-                subtotal={calculatedSubtotal}
-                discount={discountAmt}
-                grandTotal={grandTotal}
-                paidAmount={paidAmount}
-                paymentStatus={paidAmount >= grandTotal ? "paid" : "unpaid"}
-                notes={notes}
-                settings={companySettings || undefined}
-              />
+              <div className="overflow-x-auto shadow-2xl rounded-sm">
+                <InvoiceDocument
+                  invoiceNumber="TE-INV-PREVIEW"
+                  issueDate={issueDate}
+                  dueDate={dueDate}
+                  client={{
+                    name: selectedClient.name,
+                    business_name: selectedClient.business_name,
+                    email: selectedClient.email,
+                    phone: selectedClient.phone,
+                    category: selectedClient.category,
+                  }}
+                  projectName={
+                    generationMode === "project" && selectedProject
+                      ? selectedProject.title
+                      : `${selectedClient.business_name || selectedClient.name} • Deliverables Package`
+                  }
+                  items={itemsToInclude}
+                  showBreakdown={showBreakdown}
+                  includeBankInfo={includeBankInfo}
+                  subtotal={calculatedSubtotal}
+                  discount={discountAmt}
+                  grandTotal={grandTotal}
+                  paidAmount={paidAmount}
+                  paymentStatus={paidAmount >= grandTotal ? "paid" : "unpaid"}
+                  notes={notes}
+                  settings={companySettings || undefined}
+                />
+              </div>
             ) : (
               <div className="p-12 text-center rounded-xl bg-zinc-950 border border-white/10 text-zinc-400 text-xs">
                 Please select a client to preview the invoice.

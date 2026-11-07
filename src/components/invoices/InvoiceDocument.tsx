@@ -4,7 +4,7 @@ import React from "react";
 import Image from "next/image";
 import { formatPKR, formatDate } from "@/lib/utils";
 import { CompanySettings, InvoiceItemSnapshot, PaymentStatus } from "@/lib/types";
-import { Mail, Phone, CreditCard, Smartphone } from "lucide-react";
+import { Phone, Mail, Globe } from "lucide-react";
 import { InstagramIcon } from "@/components/ui/InstagramIcon";
 
 interface InvoiceDocumentProps {
@@ -48,306 +48,363 @@ export const InvoiceDocument: React.FC<InvoiceDocumentProps> = ({
   notes,
   settings,
 }) => {
-  const balanceDue = Math.max(0, grandTotal - paidAmount);
-
   const bankName = settings?.bank_name || "Meezan Bank";
-  const accountTitle = settings?.account_title || "Themed Edits";
-  const accountNumber = settings?.account_number || "01020304050607";
-  const iban = settings?.iban || "PK64MEZN0000000102030405";
-  const epTitle = settings?.easypaisa_title || "Hammad Ahmed";
-  const epNumber = settings?.easypaisa_number || "03323954620";
+  const bankDetails = settings?.bank_details || "Meezan Bank, Lasbela chawk branch";
+  const accountTitle = settings?.account_title || "HAMMAD AHMED SARDAR";
+  const accountNumber = settings?.account_number || "99560111470100";
+  const iban = settings?.iban || "PK09MEZN0099560111470100";
+
+  const epTitle = settings?.easypaisa_title || "HAMMAD AHMED SARDAR";
+  const epNumber = settings?.easypaisa_number || "0332-3954620";
+  const epDetails = settings?.easypaisa_details || "Easypaisa";
+
+  const companyPhone = settings?.whatsapp || "+92 332 3954620";
+  const companyEmail = settings?.email || "themed.edits.co@gmail.com";
+  const companyInstagram = settings?.instagram || "themed.edits.te";
+  const companyWebsite = settings?.website || "themededits.vercel.app";
+
+  // Clean URLs for links
+  const whatsappLink = `https://wa.me/${companyPhone.replace(/[^0-9]/g, "")}`;
+  const emailLink = `mailto:${companyEmail}`;
+  const instagramLink = `https://instagram.com/${companyInstagram.replace("@", "")}`;
+  const websiteLink = companyWebsite.startsWith("http") ? companyWebsite : `https://${companyWebsite}`;
+
+  // Formulate items to render:
+  // If showBreakdown is true, map items. If empty, generate single line from projectName.
+  // If showBreakdown is false, single line package summary.
+  const displayItems =
+    showBreakdown && items.length > 0
+      ? items
+      : [
+          {
+            name: projectName || "Creative & Engineering Deliverables",
+            quantity: 1,
+            unitPrice: subtotal,
+            total: subtotal,
+            notes: "Rendered professionally per project agreement.",
+          },
+        ];
 
   return (
     <div
       id="invoice-document-root"
-      className="invoice-container bg-white text-zinc-900 border border-zinc-200 shadow-2xl rounded-none w-full max-w-[800px] min-h-[1050px] mx-auto p-8 sm:p-12 font-sans flex flex-col justify-between select-text"
+      className="invoice-container bg-white text-black w-full max-w-[820px] mx-auto shadow-2xl font-sans relative flex flex-col justify-between select-text"
       style={{
         boxSizing: "border-box",
-        pageBreakInside: "avoid",
+        minHeight: "1120px", // Standard A4 aspect height ratio
       }}
     >
-      {/* ================= REPEATING/TOP HEADER ================= */}
-      <div className="invoice-header w-full border-b-2 border-zinc-900 pb-5">
-        <div className="flex items-start justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="relative w-12 h-12 overflow-hidden bg-black rounded-lg p-1 shrink-0 flex items-center justify-center">
-              <Image
-                src="/logo.png"
-                alt="Themed Edits"
-                width={40}
-                height={40}
-                className="object-contain"
-                priority
-              />
-            </div>
-            <div>
-              <h1 className="text-xl font-black text-black tracking-tight leading-none uppercase">
-                Themed Edits
+      {/* ========================================================
+          TOP HEADER SECTION: Black background bar with logo
+          (Repeats on pages if printed multi-page)
+      ======================================================== */}
+      <header className="invoice-header-bar w-full bg-black py-4 px-8 flex items-center justify-center shrink-0">
+        <div className="flex items-center gap-3">
+          <div className="relative w-10 h-10 shrink-0 flex items-center justify-center">
+            <Image
+              src="/logo.png"
+              alt="Themed Edits"
+              width={40}
+              height={40}
+              className="object-contain"
+              priority
+            />
+          </div>
+          <div className="flex flex-col">
+            <span className="text-[#f5a623] font-black text-lg tracking-wider uppercase leading-none font-sans">
+              Themed
+            </span>
+            <span className="text-[#f5a623] font-black text-lg tracking-wider uppercase leading-none font-sans">
+              Edits
+            </span>
+          </div>
+        </div>
+      </header>
+
+      {/* ========================================================
+          INVOICE MAIN CONTENT
+      ======================================================== */}
+      <main className="w-full px-8 sm:px-12 pt-8 pb-4 flex-1 flex flex-col justify-between">
+        <div>
+          {/* Top Info Grid: INVOICE title & Billed To on Left, Meta on Right */}
+          <div className="flex items-start justify-between gap-6 pb-6">
+            {/* Left: INVOICE & Billed to */}
+            <div className="space-y-4">
+              <h1 className="text-4xl sm:text-5xl font-black text-black tracking-tight leading-none uppercase">
+                Invoice
               </h1>
-              <p className="text-[10px] font-semibold text-zinc-600 uppercase tracking-widest mt-1">
-                Design • Web • Software Engineering
+
+              <div className="space-y-0.5 text-xs text-black">
+                <p className="text-[11px] font-bold text-zinc-600 uppercase tracking-wider">
+                  Billed to:
+                </p>
+                <p className="text-sm font-black text-black uppercase tracking-tight">
+                  {client.name || "Client Name"}
+                </p>
+                {client.business_name && (
+                  <p className="text-xs font-semibold text-zinc-800 uppercase tracking-wider">
+                    {client.business_name}
+                  </p>
+                )}
+                {client.phone && (
+                  <p className="text-[11px] text-zinc-600 font-medium pt-0.5">
+                    {client.phone}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* Right: Meta Details (Invoice #, Issue Date, Due Date) */}
+            <div className="text-right space-y-1.5 pt-2">
+              <div className="grid grid-cols-2 gap-x-4 text-xs">
+                <span className="font-bold text-black text-right">Invoice #</span>
+                <span className="font-semibold text-black text-right font-mono">{invoiceNumber}</span>
+              </div>
+              <div className="grid grid-cols-2 gap-x-4 text-xs">
+                <span className="font-bold text-black text-right">Issue Date</span>
+                <span className="font-semibold text-black text-right">{formatDate(issueDate)}</span>
+              </div>
+              <div className="grid grid-cols-2 gap-x-4 text-xs">
+                <span className="font-bold text-black text-right">Due Date</span>
+                <span className="font-semibold text-black text-right">{formatDate(dueDate)}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* ========================================================
+              SERVICES TABLE
+          ======================================================== */}
+          <div className="w-full mt-4">
+            <table className="w-full border-collapse text-left text-xs">
+              <thead>
+                <tr className="bg-black text-white text-[11px] font-bold tracking-wider">
+                  <th className="py-2.5 px-3 text-center w-12 font-bold">No.</th>
+                  <th className="py-2.5 px-4 font-bold">Service Description</th>
+                  <th className="py-2.5 px-3 text-right w-24 font-bold">Price</th>
+                  <th className="py-2.5 px-3 text-center w-16 font-bold">Qty.</th>
+                  <th className="py-2.5 px-4 text-right w-28 font-bold">Total</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-zinc-200 text-xs">
+                {displayItems.map((item, index) => (
+                  <tr key={index} className="align-middle">
+                    <td className="py-3 px-3 text-center font-bold text-black text-xs">
+                      {index + 1}
+                    </td>
+                    <td className="py-3 px-4">
+                      <span className="font-bold text-black block text-xs">
+                        {item.name}
+                      </span>
+                      {item.notes && (
+                        <span className="text-[10px] text-zinc-500 block mt-0.5">
+                          {item.notes}
+                        </span>
+                      )}
+                    </td>
+                    <td className="py-3 px-3 text-right font-medium text-black">
+                      {formatPKR(item.unitPrice)}
+                    </td>
+                    <td className="py-3 px-3 text-center font-medium text-black">
+                      {item.quantity}
+                    </td>
+                    <td className="py-3 px-4 text-right font-bold text-black">
+                      {formatPKR(item.total)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* ========================================================
+            ATTACHED SECTION:
+            Terms & Conditions alongside Subtotal / Discount / GRAND TOTAL
+            Immediately followed by Payment Info & Signature
+            (Always attached to bottom of grand total section!)
+        ======================================================== */}
+        <div className="mt-8 space-y-6 pt-2">
+          {/* Terms & Conditions (Left) and Grand Total (Right) */}
+          <div className="grid grid-cols-1 sm:grid-cols-12 gap-6 items-start">
+            {/* Left: Terms and Conditions */}
+            <div className="sm:col-span-6 space-y-1 text-xs">
+              <h4 className="font-bold text-black text-xs">Terms and Conditions</h4>
+              <p className="text-[10px] text-zinc-600 leading-relaxed pr-2">
+                {notes ||
+                  "Please remit payment via Bank Transfer or EasyPaisa by the specified due date. Late payments may impact subsequent deliverables schedules. All services rendered professionally per agreement."}
               </p>
             </div>
-          </div>
 
-          <div className="text-right">
-            <h2 className="text-2xl font-black tracking-tight text-zinc-900 leading-none">
-              INVOICE
-            </h2>
-            <p className="text-xs font-mono font-bold text-zinc-700 mt-1">
-              #{invoiceNumber}
-            </p>
-          </div>
-        </div>
+            {/* Right: Subtotal, Discount & GRAND TOTAL Black Bar */}
+            <div className="sm:col-span-6 space-y-1.5 text-xs">
+              <div className="flex justify-between items-center py-0.5 px-2">
+                <span className="font-bold text-black text-sm">Subtotal</span>
+                <span className="font-bold text-black text-sm">{formatPKR(subtotal)}</span>
+              </div>
 
-        {/* Meta Bar */}
-        <div className="grid grid-cols-4 gap-3 mt-5 pt-3.5 border-t border-zinc-200 text-xs">
-          <div>
-            <span className="text-[9px] font-bold uppercase text-zinc-400 block tracking-wider">
-              Issue Date
-            </span>
-            <span className="font-semibold text-zinc-900 mt-0.5 block text-xs">
-              {formatDate(issueDate)}
-            </span>
-          </div>
-
-          <div>
-            <span className="text-[9px] font-bold uppercase text-zinc-400 block tracking-wider">
-              Due Date
-            </span>
-            <span className="font-semibold text-zinc-900 mt-0.5 block text-xs">
-              {formatDate(dueDate)}
-            </span>
-          </div>
-
-          <div className="min-w-0 pr-1">
-            <span className="text-[9px] font-bold uppercase text-zinc-400 block tracking-wider">
-              Billed To
-            </span>
-            <span className="font-bold text-zinc-900 mt-0.5 block truncate text-xs">
-              {client.business_name || client.name}
-            </span>
-            {client.business_name && client.name && (
-              <span className="text-[10px] text-zinc-500 block truncate">
-                Attn: {client.name}
-              </span>
-            )}
-          </div>
-
-          <div className="text-right">
-            <span className="text-[9px] font-bold uppercase text-zinc-400 block tracking-wider">
-              Status
-            </span>
-            <span
-              className={`inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider mt-0.5 ${
-                balanceDue === 0
-                  ? "bg-zinc-900 text-white"
-                  : paidAmount > 0
-                  ? "bg-zinc-200 text-zinc-900 border border-zinc-400"
-                  : "bg-zinc-100 text-zinc-900 border border-zinc-300"
-              }`}
-            >
-              {balanceDue === 0
-                ? "Paid"
-                : paidAmount > 0
-                ? "Partial"
-                : "Payment Due"}
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {/* ================= INVOICE BODY / LINE ITEMS ================= */}
-      <div className="invoice-body flex-1 py-5 w-full flex flex-col justify-between">
-        <div>
-          {/* Project Title Banner */}
-          {projectName && (
-            <div className="mb-4 bg-zinc-50 border border-zinc-200 px-3.5 py-2 rounded">
-              <span className="text-[9px] font-bold uppercase text-zinc-400 block tracking-wider">
-                Project Scope
-              </span>
-              <span className="text-xs font-bold text-zinc-900 mt-0.5 block">
-                {projectName}
-              </span>
-            </div>
-          )}
-
-          {showBreakdown ? (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs border-collapse">
-                <thead>
-                  <tr className="border-b-2 border-zinc-900 bg-zinc-100 text-zinc-800 text-[9px] font-bold uppercase tracking-wider">
-                    <th className="py-2 px-2.5">Deliverable / Description</th>
-                    <th className="py-2 px-2 text-center w-14">Qty</th>
-                    <th className="py-2 px-2.5 text-right w-24">Rate (PKR)</th>
-                    <th className="py-2 px-2.5 text-right w-24">Amount</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-zinc-200">
-                  {items.map((item, idx) => (
-                    <tr key={idx} className="hover:bg-zinc-50/50">
-                      <td className="py-2.5 px-2.5">
-                        <span className="font-semibold text-zinc-900 block">
-                          {item.name}
-                        </span>
-                        {item.notes && (
-                          <span className="text-[10px] text-zinc-500 block mt-0.5">
-                            {item.notes}
-                          </span>
-                        )}
-                      </td>
-                      <td className="py-2.5 px-2 text-center font-medium text-zinc-700">
-                        {item.quantity}
-                      </td>
-                      <td className="py-2.5 px-2.5 text-right text-zinc-700">
-                        {formatPKR(item.unitPrice)}
-                      </td>
-                      <td className="py-2.5 px-2.5 text-right font-bold text-zinc-900">
-                        {formatPKR(item.total)}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          ) : (
-            <div className="p-4 border border-zinc-200 bg-zinc-50 rounded">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h4 className="font-bold text-sm text-zinc-900">
-                    {projectName || "Creative & Engineering Deliverables"}
-                  </h4>
-                  <p className="text-xs text-zinc-600 mt-0.5">
-                    Rendered professionally per project agreement.
-                  </p>
+              {discount > 0 && (
+                <div className="flex justify-between items-center py-0.5 px-2">
+                  <span className="font-bold text-black text-sm">Discount</span>
+                  <span className="font-bold text-black text-sm">- {formatPKR(discount)}</span>
                 </div>
-                <div className="text-right">
-                  <span className="text-[9px] uppercase font-bold text-zinc-400 block tracking-wider">
-                    Total Package
-                  </span>
-                  <span className="text-base font-black text-zinc-900">
-                    {formatPKR(subtotal)}
+              )}
+
+              {/* Solid Black Grand Total Banner */}
+              <div className="bg-black text-white px-4 py-2 flex justify-between items-center font-black text-sm uppercase tracking-wider">
+                <span>Grand Total</span>
+                <span className="text-base">{formatPKR(grandTotal)}</span>
+              </div>
+
+              {paidAmount > 0 && (
+                <div className="flex justify-between items-center py-0.5 px-2 text-[11px] text-zinc-700">
+                  <span className="font-medium">Amount Paid:</span>
+                  <span className="font-bold text-black">{formatPKR(paidAmount)}</span>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* ========================================================
+              Payment Info (Left) & Authorised Signature (Right)
+              Sticked to the end of Grand Total section!
+          ======================================================== */}
+          {includeBankInfo && (
+            <div className="grid grid-cols-1 sm:grid-cols-12 gap-6 items-end pt-2 border-t border-zinc-100">
+              {/* Left: Payment Info Accounts with exact logos */}
+              <div className="sm:col-span-7 space-y-3">
+                <h4 className="font-bold text-black text-xs">Payment Info:</h4>
+
+                {/* Meezan Bank Details */}
+                <div className="flex items-start gap-3">
+                  <div className="relative w-10 h-10 shrink-0 mt-0.5">
+                    <Image
+                      src="/meezan-logo.png"
+                      alt="Meezan Bank"
+                      width={40}
+                      height={40}
+                      className="object-contain"
+                    />
+                  </div>
+                  <div className="text-[10px] space-y-0.5 text-black">
+                    <div className="flex gap-2">
+                      <span className="text-zinc-500 w-16">Account #:</span>
+                      <span className="font-bold text-black font-mono">{accountNumber}</span>
+                    </div>
+                    <div className="flex gap-2">
+                      <span className="text-zinc-500 w-16">IBAN:</span>
+                      <span className="font-bold text-black font-mono">{iban}</span>
+                    </div>
+                    <div className="flex gap-2">
+                      <span className="text-zinc-500 w-16">A/C Name:</span>
+                      <span className="font-bold text-black uppercase">{accountTitle}</span>
+                    </div>
+                    <div className="flex gap-2">
+                      <span className="text-zinc-500 w-16">Bank Details:</span>
+                      <span className="text-zinc-800">{bankDetails}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* EasyPaisa Details */}
+                <div className="flex items-start gap-3 pt-1">
+                  <div className="relative w-10 h-10 shrink-0 mt-0.5">
+                    <Image
+                      src="/easypaisa-logo.png"
+                      alt="EasyPaisa"
+                      width={40}
+                      height={40}
+                      className="object-contain"
+                    />
+                  </div>
+                  <div className="text-[10px] space-y-0.5 text-black">
+                    <div className="flex gap-2">
+                      <span className="text-zinc-500 w-16">Account #:</span>
+                      <span className="font-bold text-black font-mono">{epNumber}</span>
+                    </div>
+                    <div className="flex gap-2">
+                      <span className="text-zinc-500 w-16">A/C Name:</span>
+                      <span className="font-bold text-black uppercase">{epTitle}</span>
+                    </div>
+                    <div className="flex gap-2">
+                      <span className="text-zinc-500 w-16">Bank Details:</span>
+                      <span className="text-zinc-800">{epDetails}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right: Authorised Sign */}
+              <div className="sm:col-span-5 flex flex-col items-center justify-end text-center pb-2">
+                <div className="relative w-36 h-20 mb-1 flex items-center justify-center">
+                  <Image
+                    src="/signature.png"
+                    alt="Authorised Sign"
+                    width={140}
+                    height={80}
+                    className="object-contain"
+                  />
+                </div>
+                <div className="w-48 border-t border-zinc-400 pt-1.5 text-center">
+                  <span className="text-[11px] font-bold text-black tracking-wide">
+                    Authorised Sign
                   </span>
                 </div>
               </div>
             </div>
           )}
         </div>
+      </main>
 
-        {/* Financial Summary & Payment Accounts */}
-        <div className="mt-6 pt-4 border-t border-zinc-200 grid grid-cols-1 sm:grid-cols-12 gap-4 items-start">
-          {/* Bank / EasyPaisa Information */}
-          <div className="sm:col-span-7 space-y-2.5">
-            {includeBankInfo && (
-              <div className="space-y-1.5 text-xs">
-                <span className="text-[9px] font-bold uppercase tracking-wider text-zinc-900 block border-b border-zinc-200 pb-0.5">
-                  Remittance / Payment Accounts
-                </span>
+      {/* ========================================================
+          BOTTOM FOOTER SECTION: Black background bar with pill links
+          (Phone, Email, Instagram, Website)
+          Repeats at bottom of page!
+      ======================================================== */}
+      <footer className="invoice-footer-bar w-full bg-black py-3 px-4 sm:px-8 shrink-0 mt-auto">
+        <div className="flex items-center justify-center gap-2 sm:gap-4 flex-wrap">
+          {/* WhatsApp / Phone Pill */}
+          <a
+            href={whatsappLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 px-3 py-1 rounded-full border border-[#f5a623] text-white text-[10px] sm:text-[11px] font-medium hover:bg-white/10 transition-colors"
+          >
+            <Phone size={11} className="text-[#f5a623]" />
+            <span>{companyPhone}</span>
+          </a>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[10px]">
-                  {/* Bank Account */}
-                  <div className="p-2 rounded bg-zinc-50 border border-zinc-200">
-                    <span className="font-bold text-zinc-900 block flex items-center gap-1">
-                      <CreditCard size={11} />
-                      <span>{bankName}</span>
-                    </span>
-                    <span className="text-zinc-600 block text-[9px] mt-0.5">
-                      Title: <strong className="text-zinc-900">{accountTitle}</strong>
-                    </span>
-                    <span className="text-zinc-600 block text-[9px]">
-                      Account: <strong className="font-mono text-zinc-900">{accountNumber}</strong>
-                    </span>
-                    <span className="text-zinc-600 block text-[9px] font-mono truncate">
-                      IBAN: {iban}
-                    </span>
-                  </div>
+          {/* Email Pill */}
+          <a
+            href={emailLink}
+            className="flex items-center gap-1.5 px-3 py-1 rounded-full border border-[#f5a623] text-white text-[10px] sm:text-[11px] font-medium hover:bg-white/10 transition-colors"
+          >
+            <Mail size={11} className="text-[#f5a623]" />
+            <span>{companyEmail}</span>
+          </a>
 
-                  {/* EasyPaisa Account */}
-                  <div className="p-2 rounded bg-zinc-50 border border-zinc-200">
-                    <span className="font-bold text-zinc-900 block flex items-center gap-1">
-                      <Smartphone size={11} />
-                      <span>EasyPaisa</span>
-                    </span>
-                    <span className="text-zinc-600 block text-[9px] mt-0.5">
-                      Title: <strong className="text-zinc-900">{epTitle}</strong>
-                    </span>
-                    <span className="text-zinc-600 block text-[9px]">
-                      Mobile #: <strong className="font-mono text-zinc-900">{epNumber}</strong>
-                    </span>
-                  </div>
-                </div>
-              </div>
-            )}
+          {/* Instagram Pill */}
+          <a
+            href={instagramLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 px-3 py-1 rounded-full border border-[#f5a623] text-white text-[10px] sm:text-[11px] font-medium hover:bg-white/10 transition-colors"
+          >
+            <InstagramIcon size={11} className="text-[#f5a623]" />
+            <span>{companyInstagram}</span>
+          </a>
 
-            {notes && (
-              <div className="p-2 rounded bg-zinc-50 border border-zinc-200 text-xs">
-                <span className="text-[9px] font-bold uppercase text-zinc-400 block tracking-wider">
-                  Payment Terms & Notes
-                </span>
-                <p className="text-zinc-700 text-[10px] mt-0.5 leading-relaxed">
-                  {notes}
-                </p>
-              </div>
-            )}
-          </div>
-
-          {/* Grand Totals Box */}
-          <div className="sm:col-span-5 bg-zinc-50 border border-zinc-200 p-3.5 rounded text-xs space-y-1.5">
-            <div className="flex justify-between text-zinc-600">
-              <span>Subtotal:</span>
-              <span className="font-semibold text-zinc-900">{formatPKR(subtotal)}</span>
-            </div>
-
-            {discount > 0 && (
-              <div className="flex justify-between text-zinc-700">
-                <span>Discount Applied:</span>
-                <span className="font-semibold">- {formatPKR(discount)}</span>
-              </div>
-            )}
-
-            <div className="flex justify-between text-sm font-black text-zinc-900 pt-1.5 border-t border-zinc-200">
-              <span>Grand Total:</span>
-              <span>{formatPKR(grandTotal)}</span>
-            </div>
-
-            {paidAmount > 0 && (
-              <div className="flex justify-between text-zinc-600 pt-0.5 text-[10px]">
-                <span>Amount Paid:</span>
-                <span className="font-semibold text-zinc-900">{formatPKR(paidAmount)}</span>
-              </div>
-            )}
-
-            <div className="flex justify-between text-sm font-black p-2 rounded bg-zinc-900 text-white mt-1.5">
-              <span>Balance Due:</span>
-              <span>{formatPKR(balanceDue)}</span>
-            </div>
-          </div>
+          {/* Website Pill */}
+          <a
+            href={websiteLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 px-3 py-1 rounded-full border border-[#f5a623] text-white text-[10px] sm:text-[11px] font-medium hover:bg-white/10 transition-colors"
+          >
+            <Globe size={11} className="text-[#f5a623]" />
+            <span>{companyWebsite}</span>
+          </a>
         </div>
-      </div>
-
-      {/* ================= STICKY FOOTER (REPEATS AT BOTTOM) ================= */}
-      <div className="invoice-footer w-full border-t-2 border-zinc-900 pt-3.5 mt-auto">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-zinc-600">
-          <div className="flex items-center gap-3.5 flex-wrap text-[10px]">
-            <span className="flex items-center gap-1 font-medium text-zinc-800">
-              <InstagramIcon size={11} className="text-zinc-900" />
-              <span>themed.edits.te</span>
-            </span>
-            <span className="flex items-center gap-1 font-medium text-zinc-800">
-              <Mail size={11} className="text-zinc-900" />
-              <span>themed.edits.co@gmail.com</span>
-            </span>
-            <span className="flex items-center gap-1 font-medium text-zinc-800">
-              <Phone size={11} className="text-zinc-900" />
-              <span>03323954620</span>
-            </span>
-          </div>
-
-          <div className="text-[9px] font-semibold uppercase tracking-wider text-zinc-500">
-            Themed Edits • Thank you for your business
-          </div>
-        </div>
-      </div>
+      </footer>
     </div>
   );
 };

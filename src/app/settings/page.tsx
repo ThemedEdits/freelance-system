@@ -143,7 +143,7 @@ export default function SettingsPage() {
             />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
             <FloatingInput
               label="Official Email"
               type="email"
@@ -164,6 +164,12 @@ export default function SettingsPage() {
               icon={<InstagramIcon size={14} />}
               value={settings.instagram}
               onChange={(e) => updateField("instagram", e.target.value)}
+            />
+
+            <FloatingInput
+              label="Website Domain"
+              value={settings.website || ""}
+              onChange={(e) => updateField("website", e.target.value)}
             />
           </div>
         </div>
@@ -213,6 +219,12 @@ export default function SettingsPage() {
                 onChange={(e) => updateField("iban", e.target.value)}
               />
             </div>
+
+            <FloatingInput
+              label="Bank Details / Branch"
+              value={settings.bank_details || ""}
+              onChange={(e) => updateField("bank_details", e.target.value)}
+            />
           </div>
 
           {/* EasyPaisa Details */}
@@ -235,6 +247,12 @@ export default function SettingsPage() {
                 onChange={(e) => updateField("easypaisa_number", e.target.value)}
               />
             </div>
+
+            <FloatingInput
+              label="Easypaisa Details / Note"
+              value={settings.easypaisa_details || ""}
+              onChange={(e) => updateField("easypaisa_details", e.target.value)}
+            />
           </div>
         </div>
 

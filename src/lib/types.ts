@@ -131,12 +131,15 @@ export interface CompanySettings {
   email: string;
   whatsapp: string;
   instagram: string;
+  website?: string;
   bank_name: string;
+  bank_details?: string;
   account_title: string;
   account_number: string;
   iban: string;
   easypaisa_title: string;
   easypaisa_number: string;
+  easypaisa_details?: string;
   currency: string;
   currency_symbol: string;
   updated_at: string;
