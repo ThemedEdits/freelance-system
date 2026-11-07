@@ -112,11 +112,18 @@ export default function InvoiceDetailPage() {
       const html2pdf = html2pdfModule.default || html2pdfModule;
 
       const opt = {
-        margin: [8, 8, 8, 8] as [number, number, number, number],
+        margin: 0,
         filename: `${invoice.invoice_number}.pdf`,
         image: { type: "jpeg" as const, quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true, letterRendering: true },
+        html2canvas: {
+          scale: 2,
+          useCORS: true,
+          letterRendering: true,
+          scrollY: 0,
+          scrollX: 0,
+        },
         jsPDF: { unit: "mm", format: "a4", orientation: "portrait" as const },
+        pagebreak: { mode: ["avoid-all", "css", "legacy"] },
       };
 
       await html2pdf().from(element).set(opt).save();

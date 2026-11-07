@@ -69,9 +69,6 @@ export const InvoiceDocument: React.FC<InvoiceDocumentProps> = ({
   const instagramLink = `https://instagram.com/${companyInstagram.replace("@", "")}`;
   const websiteLink = companyWebsite.startsWith("http") ? companyWebsite : `https://${companyWebsite}`;
 
-  // Formulate items to render:
-  // If showBreakdown is true, map items. If empty, generate single line from projectName.
-  // If showBreakdown is false, single line package summary.
   const displayItems =
     showBreakdown && items.length > 0
       ? items
@@ -88,33 +85,47 @@ export const InvoiceDocument: React.FC<InvoiceDocumentProps> = ({
   return (
     <div
       id="invoice-document-root"
-      className="invoice-container bg-white text-black w-full max-w-[820px] mx-auto shadow-2xl font-sans relative flex flex-col justify-between select-text"
+      className="invoice-container bg-white text-black font-sans relative flex flex-col justify-between select-text"
       style={{
         boxSizing: "border-box",
-        minHeight: "1120px", // Standard A4 aspect height ratio
+        width: "210mm",
+        minHeight: "297mm",
+        margin: "0 auto",
       }}
     >
       {/* ========================================================
-          TOP HEADER SECTION: Black background bar with logo
-          (Repeats on pages if printed multi-page)
+          TOP HEADER SECTION: Flush edge-to-edge solid black bar
+          Logo and THEMED EDITS text aligned vertically and centered
       ======================================================== */}
-      <header className="invoice-header-bar w-full bg-black py-4 px-8 flex items-center justify-center shrink-0">
-        <div className="flex items-center gap-3">
-          <div className="relative w-10 h-10 shrink-0 flex items-center justify-center">
+      <header
+        className="invoice-header-bar w-full bg-black py-4 px-10 flex items-center justify-center shrink-0"
+        style={{
+          boxSizing: "border-box",
+          backgroundColor: "#000000",
+        }}
+      >
+        <div className="flex items-center justify-center gap-3.5">
+          <div className="relative w-9 h-9 shrink-0 flex items-center justify-center">
             <Image
               src="/logo.png"
               alt="Themed Edits"
-              width={40}
-              height={40}
+              width={36}
+              height={36}
               className="object-contain"
               priority
             />
           </div>
-          <div className="flex flex-col">
-            <span className="text-[#f5a623] font-black text-lg tracking-wider uppercase leading-none font-sans">
+          <div className="flex flex-col justify-center leading-tight">
+            <span
+              className="text-[#f5a623] font-black text-[17px] tracking-[0.18em] uppercase font-sans"
+              style={{ lineHeight: "1.1" }}
+            >
               Themed
             </span>
-            <span className="text-[#f5a623] font-black text-lg tracking-wider uppercase leading-none font-sans">
+            <span
+              className="text-[#f5a623] font-black text-[17px] tracking-[0.18em] uppercase font-sans"
+              style={{ lineHeight: "1.1" }}
+            >
               Edits
             </span>
           </div>
@@ -122,9 +133,9 @@ export const InvoiceDocument: React.FC<InvoiceDocumentProps> = ({
       </header>
 
       {/* ========================================================
-          INVOICE MAIN CONTENT
+          INVOICE MAIN BODY CONTENT
       ======================================================== */}
-      <main className="w-full px-8 sm:px-12 pt-8 pb-4 flex-1 flex flex-col justify-between">
+      <main className="w-full px-12 pt-8 pb-4 flex-1 flex flex-col justify-between">
         <div>
           {/* Top Info Grid: INVOICE title & Billed To on Left, Meta on Right */}
           <div className="flex items-start justify-between gap-6 pb-6">
@@ -135,7 +146,7 @@ export const InvoiceDocument: React.FC<InvoiceDocumentProps> = ({
               </h1>
 
               <div className="space-y-0.5 text-xs text-black">
-                <p className="text-[11px] font-bold text-zinc-600 uppercase tracking-wider">
+                <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
                   Billed to:
                 </p>
                 <p className="text-sm font-black text-black uppercase tracking-tight">
@@ -174,7 +185,7 @@ export const InvoiceDocument: React.FC<InvoiceDocumentProps> = ({
           {/* ========================================================
               SERVICES TABLE
           ======================================================== */}
-          <div className="w-full mt-4">
+          <div className="w-full mt-2">
             <table className="w-full border-collapse text-left text-xs">
               <thead>
                 <tr className="bg-black text-white text-[11px] font-bold tracking-wider">
@@ -221,9 +232,9 @@ export const InvoiceDocument: React.FC<InvoiceDocumentProps> = ({
             ATTACHED SECTION:
             Terms & Conditions alongside Subtotal / Discount / GRAND TOTAL
             Immediately followed by Payment Info & Signature
-            (Always attached to bottom of grand total section!)
+            (Attached to bottom of grand total section!)
         ======================================================== */}
-        <div className="mt-8 space-y-6 pt-2">
+        <div className="mt-6 space-y-6 pt-2">
           {/* Terms & Conditions (Left) and Grand Total (Right) */}
           <div className="grid grid-cols-1 sm:grid-cols-12 gap-6 items-start">
             {/* Left: Terms and Conditions */}
@@ -249,10 +260,20 @@ export const InvoiceDocument: React.FC<InvoiceDocumentProps> = ({
                 </div>
               )}
 
-              {/* Solid Black Grand Total Banner */}
-              <div className="bg-black text-white px-4 py-2 flex justify-between items-center font-black text-sm uppercase tracking-wider">
-                <span>Grand Total</span>
-                <span className="text-base">{formatPKR(grandTotal)}</span>
+              {/* Solid Black Grand Total Banner with perfect vertical alignment */}
+              <div
+                className="bg-black text-white px-4 py-2.5 flex justify-between items-center font-black text-sm uppercase tracking-wider"
+                style={{
+                  boxSizing: "border-box",
+                  lineHeight: "1",
+                }}
+              >
+                <span className="inline-flex items-center text-xs font-black tracking-widest">
+                  Grand Total
+                </span>
+                <span className="inline-flex items-center text-sm font-black tracking-tight">
+                  {formatPKR(grandTotal)}
+                </span>
               </div>
 
               {paidAmount > 0 && (
@@ -266,22 +287,22 @@ export const InvoiceDocument: React.FC<InvoiceDocumentProps> = ({
 
           {/* ========================================================
               Payment Info (Left) & Authorised Signature (Right)
-              Sticked to the end of Grand Total section!
+              Padded bank logos for high resolution visibility
           ======================================================== */}
           {includeBankInfo && (
-            <div className="grid grid-cols-1 sm:grid-cols-12 gap-6 items-end pt-2 border-t border-zinc-100">
-              {/* Left: Payment Info Accounts with exact logos */}
-              <div className="sm:col-span-7 space-y-3">
+            <div className="grid grid-cols-1 sm:grid-cols-12 gap-6 items-end pt-3 border-t border-zinc-200">
+              {/* Left: Payment Info Accounts with increased logo size */}
+              <div className="sm:col-span-7 space-y-3.5">
                 <h4 className="font-bold text-black text-xs">Payment Info:</h4>
 
                 {/* Meezan Bank Details */}
-                <div className="flex items-start gap-3">
-                  <div className="relative w-10 h-10 shrink-0 mt-0.5">
+                <div className="flex items-start gap-3.5">
+                  <div className="relative w-12 h-12 shrink-0 mt-0.5 flex items-center justify-center">
                     <Image
                       src="/meezan-logo.png"
                       alt="Meezan Bank"
-                      width={40}
-                      height={40}
+                      width={48}
+                      height={48}
                       className="object-contain"
                     />
                   </div>
@@ -306,13 +327,13 @@ export const InvoiceDocument: React.FC<InvoiceDocumentProps> = ({
                 </div>
 
                 {/* EasyPaisa Details */}
-                <div className="flex items-start gap-3 pt-1">
-                  <div className="relative w-10 h-10 shrink-0 mt-0.5">
+                <div className="flex items-start gap-3.5 pt-1">
+                  <div className="relative w-12 h-12 shrink-0 mt-0.5 flex items-center justify-center">
                     <Image
                       src="/easypaisa-logo.png"
                       alt="EasyPaisa"
-                      width={40}
-                      height={40}
+                      width={48}
+                      height={48}
                       className="object-contain"
                     />
                   </div>
@@ -335,11 +356,11 @@ export const InvoiceDocument: React.FC<InvoiceDocumentProps> = ({
 
               {/* Right: Authorised Sign */}
               <div className="sm:col-span-5 flex flex-col items-center justify-end text-center pb-2">
-                <div className="relative w-36 h-20 mb-1 flex items-center justify-center">
+                <div className="relative w-40 h-20 mb-1 flex items-center justify-center">
                   <Image
                     src="/signature.png"
                     alt="Authorised Sign"
-                    width={140}
+                    width={150}
                     height={80}
                     className="object-contain"
                   />
@@ -356,30 +377,37 @@ export const InvoiceDocument: React.FC<InvoiceDocumentProps> = ({
       </main>
 
       {/* ========================================================
-          BOTTOM FOOTER SECTION: Black background bar with pill links
-          (Phone, Email, Instagram, Website)
-          Repeats at bottom of page!
+          BOTTOM FOOTER SECTION: Flush edge-to-edge solid black bar
+          Social handles pills perfectly aligned vertically
       ======================================================== */}
-      <footer className="invoice-footer-bar w-full bg-black py-3 px-4 sm:px-8 shrink-0 mt-auto">
-        <div className="flex items-center justify-center gap-2 sm:gap-4 flex-wrap">
+      <footer
+        className="invoice-footer-bar w-full bg-black py-3 px-6 shrink-0 mt-auto"
+        style={{
+          boxSizing: "border-box",
+          backgroundColor: "#000000",
+        }}
+      >
+        <div className="flex items-center justify-center gap-3 flex-wrap">
           {/* WhatsApp / Phone Pill */}
           <a
             href={whatsappLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 px-3 py-1 rounded-full border border-[#f5a623] text-white text-[10px] sm:text-[11px] font-medium hover:bg-white/10 transition-colors"
+            className="inline-flex items-center justify-center gap-1.5 px-3 py-1 rounded-full border border-[#f5a623] text-white text-[10px] font-medium leading-none hover:bg-white/10 transition-colors"
+            style={{ minHeight: "24px" }}
           >
-            <Phone size={11} className="text-[#f5a623]" />
-            <span>{companyPhone}</span>
+            <Phone size={11} className="text-[#f5a623] shrink-0" />
+            <span className="leading-none pt-[1px]">{companyPhone}</span>
           </a>
 
           {/* Email Pill */}
           <a
             href={emailLink}
-            className="flex items-center gap-1.5 px-3 py-1 rounded-full border border-[#f5a623] text-white text-[10px] sm:text-[11px] font-medium hover:bg-white/10 transition-colors"
+            className="inline-flex items-center justify-center gap-1.5 px-3 py-1 rounded-full border border-[#f5a623] text-white text-[10px] font-medium leading-none hover:bg-white/10 transition-colors"
+            style={{ minHeight: "24px" }}
           >
-            <Mail size={11} className="text-[#f5a623]" />
-            <span>{companyEmail}</span>
+            <Mail size={11} className="text-[#f5a623] shrink-0" />
+            <span className="leading-none pt-[1px]">{companyEmail}</span>
           </a>
 
           {/* Instagram Pill */}
@@ -387,10 +415,11 @@ export const InvoiceDocument: React.FC<InvoiceDocumentProps> = ({
             href={instagramLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 px-3 py-1 rounded-full border border-[#f5a623] text-white text-[10px] sm:text-[11px] font-medium hover:bg-white/10 transition-colors"
+            className="inline-flex items-center justify-center gap-1.5 px-3 py-1 rounded-full border border-[#f5a623] text-white text-[10px] font-medium leading-none hover:bg-white/10 transition-colors"
+            style={{ minHeight: "24px" }}
           >
-            <InstagramIcon size={11} className="text-[#f5a623]" />
-            <span>{companyInstagram}</span>
+            <InstagramIcon size={11} className="text-[#f5a623] shrink-0" />
+            <span className="leading-none pt-[1px]">{companyInstagram}</span>
           </a>
 
           {/* Website Pill */}
@@ -398,10 +427,11 @@ export const InvoiceDocument: React.FC<InvoiceDocumentProps> = ({
             href={websiteLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 px-3 py-1 rounded-full border border-[#f5a623] text-white text-[10px] sm:text-[11px] font-medium hover:bg-white/10 transition-colors"
+            className="inline-flex items-center justify-center gap-1.5 px-3 py-1 rounded-full border border-[#f5a623] text-white text-[10px] font-medium leading-none hover:bg-white/10 transition-colors"
+            style={{ minHeight: "24px" }}
           >
-            <Globe size={11} className="text-[#f5a623]" />
-            <span>{companyWebsite}</span>
+            <Globe size={11} className="text-[#f5a623] shrink-0" />
+            <span className="leading-none pt-[1px]">{companyWebsite}</span>
           </a>
         </div>
       </footer>
